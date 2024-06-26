@@ -54,6 +54,13 @@ export default function TabLayout() {
                     tabBarIcon: ({ color }) => <TabBarIcon name="hamburger" color={color} />,
                 }}
             />
+            <Tabs.Screen
+                name="karte"
+                options={{
+                    title: 'Shops',
+                    tabBarIcon: ({ color }) => <TabBarIcon name="location-arrow" color={color} />,
+                }}
+            />
         </Tabs>
     );
 }
