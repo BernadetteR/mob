@@ -7,7 +7,8 @@ import axios from 'axios';
 export default function TabTwoScreen() {
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
-    const [supermarkets, setSupermarkets] = useState([]);
+    const [stores, setStores] = useState([]);
+    const [selectedStore, setSelectedStore] = useState(null);
 
     useEffect(() => {
         (async () => {
@@ -20,20 +21,41 @@ export default function TabTwoScreen() {
             let location = await Location.getCurrentPositionAsync({});
             setLocation(location);
 
-            // Load nearby supermarkets
-            loadNearbySupermarkets(location.coords.latitude, location.coords.longitude);
+            // Load nearby stores (supermarkets, grocery stores, convenience stores)
+            loadNearbyStores(location.coords.latitude, location.coords.longitude);
         })();
     }, []);
 
-    const loadNearbySupermarkets = async (latitude, longitude) => {
+    const loadNearbyStores = async (latitude, longitude) => {
         try {
             const response = await axios.get(
-                `https://overpass-api.de/api/interpreter?data=[out:json];node["shop"="supermarket"](around:10000,${latitude},${longitude});out body;`
+                `https://overpass-api.de/api/interpreter?data=[out:json];(node["shop"="supermarket"](around:10000,${latitude},${longitude});node["shop"="grocery"](around:2000,${latitude},${longitude});node["shop"="convenience"](around:2000,${latitude},${longitude}););out body;`
             );
 
-            setSupermarkets(response.data.elements);
+            setStores(response.data.elements);
         } catch (error) {
-            console.error('Error fetching nearby supermarkets:', error);
+            console.error('Error fetching nearby stores:', error);
+        }
+    };
+
+    const handleMarkerPress = (store) => {
+        setSelectedStore(store);
+    };
+
+    const renderOpeningHours = () => {
+        if (selectedStore && selectedStore.tags.opening_hours) {
+            return (
+                <View style={styles.openingHoursContainer}>
+                    <Text style={styles.openingHoursTitle}>Opening Hours:</Text>
+                    <Text>{selectedStore.tags.opening_hours}</Text>
+                </View>
+            );
+        } else {
+            return (
+                <View style={styles.openingHoursContainer}>
+                    <Text style={styles.openingHoursTitle}>No opening hours available</Text>
+                </View>
+            );
         }
     };
 
@@ -73,17 +95,25 @@ export default function TabTwoScreen() {
                     title="I am here"
                 />
 
-                {supermarkets.map(supermarket => (
+                {stores.map(store => (
                     <Marker
-                        key={supermarket.id}
+                        key={store.id}
                         coordinate={{
-                            latitude: supermarket.lat,
-                            longitude: supermarket.lon,
+                            latitude: store.lat,
+                            longitude: store.lon,
                         }}
-                        title={supermarket.tags.name || 'Supermarket'}
+                        title={store.tags.name || 'Store'}
+                        onPress={() => handleMarkerPress(store)}
                     />
                 ))}
             </MapView>
+
+            {selectedStore && (
+                <View style={styles.selectedStoreContainer}>
+                    <Text style={styles.selectedStoreTitle}>{selectedStore.tags.name}</Text>
+                    {renderOpeningHours()}
+                </View>
+            )}
         </View>
     );
 }
@@ -100,6 +130,26 @@ const styles = StyleSheet.create({
     },
     map: {
         width: '100%',
-        height: '100%',
+        height: '70%',
+    },
+    selectedStoreContainer: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: 'white',
+        padding: 10,
+        borderTopWidth: 1,
+        borderTopColor: '#ccc',
+    },
+    selectedStoreTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    openingHoursContainer: {
+        marginTop: 5,
+    },
+    openingHoursTitle: {
+        fontWeight: 'bold',
     },
 });
