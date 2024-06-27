@@ -50,8 +50,8 @@ export default function TabLayout() {
             <Tabs.Screen
                 name="two"
                 options={{
-                    title: 'Surprise me',
-                    tabBarIcon: ({ color }) => <TabBarIcon name="heart" color={color} />,
+                    title: 'Surprise',
+                    tabBarIcon: ({ color }) => <TabBarIcon name="question" color={color} />,
                 }}
             />
             <Tabs.Screen
@@ -59,6 +59,13 @@ export default function TabLayout() {
                 options={{
                     title: 'Shops',
                     tabBarIcon: ({ color }) => <TabBarIcon name="map-marker-alt" color={color} />,
+                }}
+            />
+            <Tabs.Screen
+                name="like"
+                options={{
+                    title: 'Liked',
+                    tabBarIcon: ({ color }) => <TabBarIcon name="heart" color={color} />,
                 }}
             />
         </Tabs>
