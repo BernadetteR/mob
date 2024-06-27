@@ -1,29 +1,36 @@
-import React, { useState } from 'react';
-import { StyleSheet, ImageBackground, Button, View, FlatList, Text, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, ImageBackground, Button, View, FlatList, Text, TouchableWithoutFeedback, Keyboard, ActivityIndicator, Image } from 'react-native';
 import { Searchbar } from 'react-native-paper';
+import Header from '../../components/Header';
 
 import essenImage from '../../img/essen.png';
 
-const DATA = [
-  { id: '1', title: 'Baked salmon with fennel & tomatoes' },
-  { id: '2', title: 'Cajun spiced fish tacos' },
-  { id: '3', title: 'Escovitch Fish' },
-  { id: '4', title: 'Fish fofos' },
-  { id: '5', title: 'Fish pie' },
-  { id: '6', title: 'Pasta with tomato sauce' }
-  // Weitere Einträge...
-];
-
 export default function TabOneScreen() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=')
+        .then((response) => response.json())
+        .then((json) => {
+          setData(json.meals);
+          setLoading(false);
+        })
+        .catch((error) => {
+          setError(error);
+          setLoading(false);
+        });
+  }, []);
 
   const onChangeSearch = query => {
     setSearchQuery(query);
     if (query) {
       setFilteredData(
-          DATA.filter(item =>
-              item.title.toLowerCase().includes(query.toLowerCase())
+          data.filter(item =>
+              item.strMeal.toLowerCase().includes(query.toLowerCase())
           )
       );
     } else {
@@ -33,18 +40,35 @@ export default function TabOneScreen() {
 
   const renderItem = ({ item }) => (
       <View style={styles.item}>
-        <Text style={styles.title}>{item.title}</Text>
+        <Image source={{ uri: item.strMealThumb }} style={styles.thumbnail} />
+        <Text style={styles.title}>{item.strMeal}</Text>
       </View>
   );
+
+  if (loading) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
+
+  if (error) {
+    return (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>Error: {error.message}</Text>
+        </View>
+    );
+  }
 
   return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={{ flex: 1 }}>
+
           <ImageBackground
               source={essenImage}
               style={styles.background}
           >
+
             <View style={styles.container}>
+              <Header headlineText="Enter your ingredients" />
+
               <Text style={styles.headerTitle}>Recipes</Text>
               <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
 
@@ -68,8 +92,9 @@ export default function TabOneScreen() {
               {/* FlatList hinzufügen */}
               <FlatList
                   data={filteredData}
+                  keyExtractor={item => item.idMeal}
                   renderItem={renderItem}
-                  keyExtractor={item => item.id}
+                  contentContainerStyle={styles.list}
               />
             </View>
           </ImageBackground>
@@ -79,6 +104,9 @@ export default function TabOneScreen() {
 }
 
 const styles = StyleSheet.create({
+  list: {
+    padding: 10,
+  },
   background: {
     flex: 1,
     resizeMode: 'cover',
@@ -110,12 +138,37 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   item: {
+    flexDirection: 'row',
+    marginBottom: 10,
+    backgroundColor: '#f9f9f9',
     padding: 10,
-    marginVertical: 8,
-    backgroundColor: '#f9c2ff',
-    width: '100%',
+    borderRadius: 5,
+  },
+  thumbnail: {
+    width: 100,
+    height: 100,
+    borderRadius: 5,
+    marginRight: 10,
   },
   title: {
     fontSize: 18,
+    flex: 1,
+    flexWrap: 'wrap',
+    alignSelf: 'center',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 18,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: '#333',
+    textAlign: 'center',
+    marginTop: 20,
   },
 });
