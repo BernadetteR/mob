@@ -36,6 +36,5 @@ const styles = StyleSheet.create({
     headline: {
         color: 'white',
         fontSize: 24,
-        fontWeight: 'bold',
     },
 });
