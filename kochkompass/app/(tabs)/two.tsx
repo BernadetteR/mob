@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
 import { StyleSheet, Button, Text, View, ActivityIndicator, Image, ScrollView } from 'react-native';
 
+type Recipe = {
+  strMeal: string;
+  strMealThumb: string;
+  strInstructions: string;
+};
+
 export default function TabTwoScreen() {
-  const [recipe, setRecipe] = useState(null);
+  const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [loading, setLoading] = useState(false);
 
   const fetchRandomRecipe = async () => {
@@ -21,7 +27,7 @@ export default function TabTwoScreen() {
   return (
       <View style={styles.container}>
         <Text style={styles.title}>Zufälliges Rezept</Text>
-        <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+        <View style={styles.separator} />
 
         <Button title="Neues Rezept laden" onPress={fetchRandomRecipe} />
 
@@ -55,6 +61,7 @@ const styles = StyleSheet.create({
     marginVertical: 30,
     height: 1,
     width: '80%',
+    backgroundColor: '#eee',
   },
   scrollContainer: {
     alignItems: 'center',
