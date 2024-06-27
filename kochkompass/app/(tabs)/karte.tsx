@@ -4,11 +4,28 @@ import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import axios from 'axios';
 
+type LocationObject = {
+    coords: {
+        latitude: number;
+        longitude: number;
+    };
+};
+
+type Store = {
+    id: number;
+    lat: number;
+    lon: number;
+    tags: {
+        name?: string;
+        opening_hours?: string;
+    };
+};
+
 export default function TabTwoScreen() {
-    const [location, setLocation] = useState(null);
-    const [errorMsg, setErrorMsg] = useState(null);
-    const [stores, setStores] = useState([]);
-    const [selectedStore, setSelectedStore] = useState(null);
+    const [location, setLocation] = useState<LocationObject | null>(null);
+    const [errorMsg, setErrorMsg] = useState<string | null>(null);
+    const [stores, setStores] = useState<Store[]>([]);
+    const [selectedStore, setSelectedStore] = useState<Store | null>(null);
 
     useEffect(() => {
         (async () => {
@@ -26,7 +43,7 @@ export default function TabTwoScreen() {
         })();
     }, []);
 
-    const loadNearbyStores = async (latitude, longitude) => {
+    const loadNearbyStores = async (latitude: number, longitude: number) => {
         try {
             const response = await axios.get(
                 `https://overpass-api.de/api/interpreter?data=[out:json];(node["shop"="supermarket"](around:10000,${latitude},${longitude});node["shop"="grocery"](around:2000,${latitude},${longitude});node["shop"="convenience"](around:2000,${latitude},${longitude}););out body;`
@@ -38,7 +55,7 @@ export default function TabTwoScreen() {
         }
     };
 
-    const handleMarkerPress = (store) => {
+    const handleMarkerPress = (store: Store) => {
         setSelectedStore(store);
     };
 
