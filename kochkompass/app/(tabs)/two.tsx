@@ -8,6 +8,7 @@ const DATA = [
   { id: '3', title: 'Escovitch Fish' },
   { id: '4', title: 'Fish fofos' },
   { id: '5', title: 'Fish pie' },
+  { id: '6', title: 'Pasta with tomato sauce'}
   // Weitere Einträge...
 ];
 
