@@ -1,41 +1,89 @@
-import React, { useState } from 'react';
-import { StyleSheet, Button, Text, View, ActivityIndicator, Image, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View, Text, ActivityIndicator } from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
+import * as Location from 'expo-location';
+import axios from 'axios';
 
 export default function TabTwoScreen() {
-    const [recipe, setRecipe] = useState(null);
-    const [loading, setLoading] = useState(false);
+    const [location, setLocation] = useState(null);
+    const [errorMsg, setErrorMsg] = useState(null);
+    const [supermarkets, setSupermarkets] = useState([]);
 
-    const fetchRandomRecipe = async () => {
-        setLoading(true);
+    useEffect(() => {
+        (async () => {
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== 'granted') {
+                setErrorMsg('Permission to access location was denied');
+                return;
+            }
+
+            let location = await Location.getCurrentPositionAsync({});
+            setLocation(location);
+
+            // Load nearby supermarkets
+            loadNearbySupermarkets(location.coords.latitude, location.coords.longitude);
+        })();
+    }, []);
+
+    const loadNearbySupermarkets = async (latitude, longitude) => {
         try {
-            const response = await fetch('https://www.themealdb.com/api/json/v1/1/random.php');
-            const data = await response.json();
-            setRecipe(data.meals[0]);
+            const response = await axios.get(
+                `https://overpass-api.de/api/interpreter?data=[out:json];node["shop"="supermarket"](around:10000,${latitude},${longitude});out body;`
+            );
+
+            setSupermarkets(response.data.elements);
         } catch (error) {
-            console.error('Fehler beim Abrufen des Rezepts:', error);
-        } finally {
-            setLoading(false);
+            console.error('Error fetching nearby supermarkets:', error);
         }
     };
 
+    if (errorMsg) {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.title}>Error</Text>
+                <Text>{errorMsg}</Text>
+            </View>
+        );
+    }
+
+    if (!location) {
+        return (
+            <View style={styles.container}>
+                <ActivityIndicator size="large" />
+            </View>
+        );
+    }
+
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Zufälliges Rezept</Text>
-            <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+            <MapView
+                style={styles.map}
+                initialRegion={{
+                    latitude: location.coords.latitude,
+                    longitude: location.coords.longitude,
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.0421,
+                }}
+            >
+                <Marker
+                    coordinate={{
+                        latitude: location.coords.latitude,
+                        longitude: location.coords.longitude,
+                    }}
+                    title="I am here"
+                />
 
-            <Button title="Neues Rezept laden" onPress={fetchRandomRecipe} />
-
-            {loading && <ActivityIndicator size="large" color="#0000ff" />}
-
-            {recipe && (
-                <ScrollView contentContainerStyle={styles.scrollContainer}>
-                    <View style={styles.recipeContainer}>
-                        <Text style={styles.recipeTitle}>{recipe.strMeal}</Text>
-                        <Image source={{ uri: recipe.strMealThumb }} style={styles.recipeImage} />
-                        <Text style={styles.recipeInstructions}>{recipe.strInstructions}</Text>
-                    </View>
-                </ScrollView>
-            )}
+                {supermarkets.map(supermarket => (
+                    <Marker
+                        key={supermarket.id}
+                        coordinate={{
+                            latitude: supermarket.lat,
+                            longitude: supermarket.lon,
+                        }}
+                        title={supermarket.tags.name || 'Supermarket'}
+                    />
+                ))}
+            </MapView>
         </View>
     );
 }
@@ -45,38 +93,13 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        padding: 20,
     },
     title: {
         fontSize: 20,
         fontWeight: 'bold',
     },
-    separator: {
-        marginVertical: 30,
-        height: 1,
-        width: '80%',
-    },
-    scrollContainer: {
-        alignItems: 'center',
-    },
-    recipeContainer: {
-        marginTop: 20,
-        alignItems: 'center',
-    },
-    recipeTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginBottom: 10,
-        textAlign: 'center',
-    },
-    recipeImage: {
-        width: 300,
-        height: 300,
-        marginBottom: 10,
-    },
-    recipeInstructions: {
-        fontSize: 16,
-        textAlign: 'center',
-        paddingHorizontal: 10,
+    map: {
+        width: '100%',
+        height: '100%',
     },
 });
