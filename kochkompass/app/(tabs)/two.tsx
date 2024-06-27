@@ -1,70 +1,82 @@
 import React, { useState } from 'react';
-import { View, FlatList, StyleSheet, Text } from 'react-native';
-import { Searchbar } from 'react-native-paper';
+import { StyleSheet, Button, Text, View, ActivityIndicator, Image, ScrollView } from 'react-native';
 
-const DATA = [
-  { id: '1', title: 'Baked salmon with fennel & tomatoes' },
-  { id: '2', title: 'Cajun spiced fish tacos' },
-  { id: '3', title: 'Escovitch Fish' },
-  { id: '4', title: 'Fish fofos' },
-  { id: '5', title: 'Fish pie' },
-  { id: '6', title: 'Pasta with tomato sauce'}
-  // Weitere Einträge...
-];
+export default function TabTwoScreen() {
+  const [recipe, setRecipe] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-const App = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filteredData, setFilteredData] = useState(DATA);
-
-  const onChangeSearch = query => {
-    setSearchQuery(query);
-    if (query) {
-      setFilteredData(
-          DATA.filter(item =>
-              item.title.toLowerCase().includes(query.toLowerCase())
-          )
-      );
-    } else {
-      setFilteredData(DATA);
+  const fetchRandomRecipe = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch('https://www.themealdb.com/api/json/v1/1/random.php');
+      const data = await response.json();
+      setRecipe(data.meals[0]);
+    } catch (error) {
+      console.error('Fehler beim Abrufen des Rezepts:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const renderItem = ({ item }) => (
-      <View style={styles.item}>
-        <Text style={styles.title}>{item.title}</Text>
-      </View>
-  );
-
   return (
       <View style={styles.container}>
-        <Searchbar
-            placeholder="Search"
-            onChangeText={onChangeSearch}
-            value={searchQuery}
-        />
-        <FlatList
-            data={filteredData}
-            renderItem={renderItem}
-            keyExtractor={item => item.id}
-        />
+        <Text style={styles.title}>Zufälliges Rezept</Text>
+        <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+
+        <Button title="Neues Rezept laden" onPress={fetchRandomRecipe} />
+
+        {loading && <ActivityIndicator size="large" color="#0000ff" />}
+
+        {recipe && (
+            <ScrollView contentContainerStyle={styles.scrollContainer}>
+              <View style={styles.recipeContainer}>
+                <Text style={styles.recipeTitle}>{recipe.strMeal}</Text>
+                <Image source={{ uri: recipe.strMealThumb }} style={styles.recipeImage} />
+                <Text style={styles.recipeInstructions}>{recipe.strInstructions}</Text>
+              </View>
+            </ScrollView>
+        )}
       </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 40,
-    paddingHorizontal: 20,
-  },
-  item: {
-    padding: 10,
-    marginVertical: 8,
-    backgroundColor: '#f9c2ff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
   },
   title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  separator: {
+    marginVertical: 30,
+    height: 1,
+    width: '80%',
+  },
+  scrollContainer: {
+    alignItems: 'center',
+  },
+  recipeContainer: {
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  recipeTitle: {
     fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  recipeImage: {
+    width: 300,
+    height: 300,
+    marginBottom: 10,
+  },
+  recipeInstructions: {
+    fontSize: 16,
+    textAlign: 'center',
+    paddingHorizontal: 10,
   },
 });
-
-export default App;
