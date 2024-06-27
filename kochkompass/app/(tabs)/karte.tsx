@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, ActivityIndicator } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
+import axios from 'axios';
 
 export default function TabTwoScreen() {
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
+    const [supermarkets, setSupermarkets] = useState([]);
 
     useEffect(() => {
         (async () => {
@@ -17,8 +19,23 @@ export default function TabTwoScreen() {
 
             let location = await Location.getCurrentPositionAsync({});
             setLocation(location);
+
+            // Load nearby supermarkets
+            loadNearbySupermarkets(location.coords.latitude, location.coords.longitude);
         })();
     }, []);
+
+    const loadNearbySupermarkets = async (latitude, longitude) => {
+        try {
+            const response = await axios.get(
+                `https://overpass-api.de/api/interpreter?data=[out:json];node["shop"="supermarket"](around:10000,${latitude},${longitude});out body;`
+            );
+
+            setSupermarkets(response.data.elements);
+        } catch (error) {
+            console.error('Error fetching nearby supermarkets:', error);
+        }
+    };
 
     if (errorMsg) {
         return (
@@ -55,6 +72,17 @@ export default function TabTwoScreen() {
                     }}
                     title="I am here"
                 />
+
+                {supermarkets.map(supermarket => (
+                    <Marker
+                        key={supermarket.id}
+                        coordinate={{
+                            latitude: supermarket.lat,
+                            longitude: supermarket.lon,
+                        }}
+                        title={supermarket.tags.name || 'Supermarket'}
+                    />
+                ))}
             </MapView>
         </View>
     );
