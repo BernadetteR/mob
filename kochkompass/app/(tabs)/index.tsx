@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, ImageBackground, Button, View, FlatList, Text, TouchableWithoutFeedback, Keyboard, ActivityIndicator, Image, ScrollView } from 'react-native';
+import { StyleSheet, ImageBackground, Button, View, FlatList, Text, TouchableWithoutFeedback, Keyboard, ActivityIndicator, ScrollView, TouchableOpacity } from 'react-native';
 import { Searchbar } from 'react-native-paper';
 import Header from '../../components/Header';
+import RecipeItem from '../../components/RecipeItem'; // Importiere die RecipeItem-Komponente
+import RecipeDetailScreen from '../../components/RecipeDetailScreen'; // Importiere die RecipeDetailScreen-Komponente
 import essenImage from '../../img/essen.png';
 
 interface Meal {
@@ -19,6 +21,7 @@ export default function TabOneScreen() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
   const [category, setCategory] = useState<string>('');
+  const [selectedRecipe, setSelectedRecipe] = useState<Meal | null>(null); // Zustand für ausgewähltes Rezept
 
   useEffect(() => {
     fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=')
@@ -79,11 +82,16 @@ export default function TabOneScreen() {
         });
   };
 
+  const handlePress = (item: Meal) => {
+    setSelectedRecipe(item); // Setze das ausgewählte Rezept
+  };
+
+  const handleBackPress = () => {
+    setSelectedRecipe(null); // Zurück zur Listenansicht
+  };
+
   const renderItem = ({ item }: { item: Meal }) => (
-      <View style={styles.item}>
-        <Image source={{ uri: item.strMealThumb }} style={styles.thumbnail} />
-        <Text style={styles.title}>{item.strMeal}</Text>
-      </View>
+      <RecipeItem item={item} onPress={handlePress} /> // Verwende die RecipeItem-Komponente
   );
 
   if (loading) {
@@ -95,6 +103,13 @@ export default function TabOneScreen() {
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>Error: {error.message}</Text>
         </View>
+    );
+  }
+
+  if (selectedRecipe) {
+    // Zeige die Detailansicht, wenn ein Rezept ausgewählt ist
+    return (
+        <RecipeDetailScreen recipe={selectedRecipe} onBackPress={handleBackPress} />
     );
   }
 

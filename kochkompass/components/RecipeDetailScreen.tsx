@@ -1,56 +1,23 @@
 import React from 'react';
-import { StyleSheet, View, Text, ImageBackground, ScrollView, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, Image, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
 import { WebView } from 'react-native-webview';
-import { Ionicons } from '@expo/vector-icons';
 
-export default function RecipeDetailScreen({ route, navigation }) {
-    const { recipe } = route.params;
-
-    const renderIngredients = () => {
-        let ingredients = [];
-        for (let i = 1; i <= 20; i++) {
-            if (recipe[`strIngredient${i}`]) {
-                ingredients.push(
-                    <Text key={i} style={styles.ingredient}>
-                        {recipe[`strIngredient${i}`]} - {recipe[`strMeasure${i}`]}
-                    </Text>
-                );
-            }
-        }
-        return ingredients;
-    };
-
+export default function RecipeDetailScreen({ recipe, onBackPress }) {
     return (
         <ImageBackground source={{ uri: recipe.strMealThumb }} style={styles.background}>
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
-                <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-                    <Ionicons name="arrow-back" size={24} color="white" />
+            <ScrollView contentContainerStyle={styles.container}>
+                <TouchableOpacity onPress={onBackPress} style={styles.backButton}>
+                    <Text style={styles.backButtonText}>← Back</Text>
                 </TouchableOpacity>
-                <View style={styles.overlayContainer}>
+                <View style={styles.overlay}>
                     <Text style={styles.title}>{recipe.strMeal}</Text>
-                    <View style={styles.tagContainer}>
-                        <Text style={styles.tag}>{recipe.strCategory}</Text>
-                        <Text style={styles.tag}>{recipe.strArea}</Text>
-                    </View>
-                    <View style={styles.section}>
-                        <Text style={styles.sectionTitle}>Ingredients</Text>
-                        {renderIngredients()}
-                    </View>
-                    <View style={styles.section}>
-                        <Text style={styles.sectionTitle}>Instructions</Text>
-                        <Text style={styles.instructions}>{recipe.strInstructions}</Text>
-                    </View>
-                    {recipe.strYoutube ? (
-                        <View style={styles.videoContainer}>
-                            <Text style={styles.sectionTitle}>Video</Text>
-                            <WebView
-                                style={styles.video}
-                                javaScriptEnabled={true}
-                                domStorageEnabled={true}
-                                source={{ uri: recipe.strYoutube.replace("watch?v=", "embed/") }}
-                            />
-                        </View>
-                    ) : null}
+                    <Text style={styles.category}>{recipe.strCategory}</Text>
+                    <Image source={{ uri: recipe.strMealThumb }} style={styles.thumbnail} />
+                    <Text style={styles.instructions}>{recipe.strInstructions}</Text>
+                    <WebView
+                        style={styles.video}
+                        source={{ uri: recipe.strYoutube.replace("watch?v=", "embed/") }}
+                    />
                 </View>
             </ScrollView>
         </ImageBackground>
@@ -62,66 +29,58 @@ const styles = StyleSheet.create({
         flex: 1,
         resizeMode: 'cover',
     },
-    scrollContainer: {
+    container: {
         flexGrow: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: 20,
     },
-    backButton: {
-        position: 'absolute',
-        top: 40,
-        left: 20,
-        zIndex: 1,
-    },
-    overlayContainer: {
-        flex: 1,
+    overlay: {
         backgroundColor: 'rgba(255, 255, 255, 0.9)',
-        borderRadius: 20,
+        borderRadius: 8,
         padding: 20,
-        margin: 20,
+        width: '100%',
     },
     title: {
-        fontSize: 28,
+        fontSize: 24,
         fontWeight: 'bold',
-        color: '#333',
+        color: 'black',
+        marginBottom: 10,
         textAlign: 'center',
+    },
+    category: {
+        fontSize: 18,
+        color: 'black',
         marginBottom: 10,
+        textAlign: 'center',
     },
-    tagContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
+    thumbnail: {
+        width: '100%',
+        height: 200,
+        borderRadius: 8,
         marginBottom: 20,
-    },
-    tag: {
-        backgroundColor: '#ddd',
-        color: '#555',
-        borderRadius: 10,
-        paddingVertical: 5,
-        paddingHorizontal: 10,
-        marginHorizontal: 5,
-    },
-    section: {
-        marginBottom: 20,
-    },
-    sectionTitle: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: '#333',
-        marginBottom: 10,
-    },
-    ingredient: {
-        fontSize: 16,
-        color: '#555',
-        marginBottom: 5,
     },
     instructions: {
         fontSize: 16,
-        color: '#555',
-        textAlign: 'left',
+        color: 'black',
+        marginBottom: 20,
     },
-    videoContainer: {
-        height: 200,
-        marginTop: 20,
+    backButton: {
+        alignSelf: 'flex-start',
+        marginBottom: 20,
+        marginTop: 10,
+    },
+    backButtonText: {
+        fontSize: 18,
+        color: 'white',
+        backgroundColor: 'black',
+        padding: 10,
+        borderRadius: 8,
     },
     video: {
-        flex: 1,
+        width: '100%',
+        height: 200,
+        marginTop: 20,
+        marginBottom: 20,
     },
 });
