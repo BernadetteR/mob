@@ -19,31 +19,66 @@ interface Meal {
 export default function TabOneScreen() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [data, setData] = useState<Meal[]>([]);
-  const [filteredData, setFilteredData] = useState<Meal[]>([]);
+  const [filteredData, setFilteredData] = useState<Meal[]>([]); // Initialize with empty array
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
   const [selectedRecipe, setSelectedRecipe] = useState<Meal | null>(null); // Zustand für ausgewähltes Rezept
 
   useEffect(() => {
-    fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=')
-        .then((response) => response.json())
-        .then((json) => {
-          const meals: Meal[] = json.meals.map((meal: any) => {
-            let ingredients: string[] = [];
-            for (let i = 1; i <= 20; i++) {
-              const ingredient = meal[`strIngredient${i}`];
-              if (ingredient) ingredients.push(ingredient.toLowerCase());
+    fetchRecipesFromAtoZ();
+  }, []);
+
+  const fetchRecipesFromAtoZ = () => {
+    setLoading(true);
+    const letters = 'abcdefghijklmnopqrstuvwxyz';
+    const promises = letters.split('').map(letter =>
+        fetch(`https://www.themealdb.com/api/json/v1/1/search.php?f=${letter}`)
+            .then(response => response.json())
+            .then(json => json.meals)
+            .catch(error => {
+              console.error('Error fetching recipes for letter', letter, error);
+              return [];
+            })
+    );
+
+    Promise.all(promises)
+        .then(results => {
+          let allMeals: Meal[] = [];
+          results.forEach(meals => {
+            if (meals) {
+              const mappedMeals = meals.map((meal: any) => ({
+                idMeal: meal.idMeal,
+                strMeal: meal.strMeal,
+                strMealThumb: meal.strMealThumb,
+                ingredients: extractIngredients(meal),
+                strInstructions: meal.strInstructions,
+                strYoutube: meal.strYoutube,
+              }));
+              allMeals = [...allMeals, ...mappedMeals];
             }
-            return { ...meal, ingredients };
           });
-          setData(meals);
+          setData(allMeals);
           setLoading(false);
         })
-        .catch((error) => {
+        .catch(error => {
+          console.error('Error fetching recipes from A to Z', error);
           setError(error);
           setLoading(false);
         });
-  }, []);
+  };
+
+  const extractIngredients = (meal: any): string[] => {
+    let ingredients: string[] = [];
+    for (let i = 1; i <= 20; i++) {
+      const ingredient = meal[`strIngredient${i}`];
+      if (ingredient) {
+        ingredients.push(ingredient.toLowerCase());
+      } else {
+        break; // Stop if no more ingredients are found
+      }
+    }
+    return ingredients;
+  };
 
   const onChangeSearch = (query: string) => {
     setSearchQuery(query);
@@ -66,14 +101,14 @@ export default function TabOneScreen() {
     fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`)
         .then((response) => response.json())
         .then((json) => {
-          const categoryMeals: Meal[] = json.meals.map((meal: any) => {
-            let ingredients: string[] = [];
-            for (let i = 1; i <= 20; i++) {
-              const ingredient = meal[`strIngredient${i}`];
-              if (ingredient) ingredients.push(ingredient.toLowerCase());
-            }
-            return { ...meal, ingredients };
-          });
+          const categoryMeals: Meal[] = json.meals.map((meal: any) => ({
+            idMeal: meal.idMeal,
+            strMeal: meal.strMeal,
+            strMealThumb: meal.strMealThumb,
+            ingredients: extractIngredients(meal),
+            strInstructions: meal.strInstructions,
+            strYoutube: meal.strYoutube,
+          }));
 
           setFilteredData(categoryMeals);
           setLoading(false);
@@ -148,11 +183,15 @@ export default function TabOneScreen() {
               <Button title="Klicken Sie mich" onPress={() => alert('Button wurde geklickt!')} />
               <Searchbar placeholder="Search" onChangeText={onChangeSearch} value={searchQuery} style={styles.searchbar} />
               <View style={styles.buttonContainer}>
-                {['Beef', 'Chicken', 'Dessert', 'Pasta', 'Pork', 'Seafood', 'Vegetarian', 'Vegan' ].map((cat) => (
+                {['Beef', 'Chicken', 'Dessert', 'Pasta', 'Pork', 'Seafood', 'Vegetarian', 'Vegan'].map((cat) => (
                     <Button key={cat} title={cat} onPress={() => fetchCategoryData(cat)} />
                 ))}
               </View>
-              <FlatList data={filteredData} keyExtractor={(item) => item.idMeal} renderItem={renderItem} contentContainerStyle={styles.list} />
+              {filteredData.length > 0 ? (
+                  <FlatList data={filteredData} keyExtractor={(item) => item.idMeal} renderItem={renderItem} contentContainerStyle={styles.list} />
+              ) : (
+                  <Text style={styles.noRecipesText}>No recipes found.</Text>
+              )}
             </View>
           </ImageBackground>
         </ScrollView>
@@ -231,5 +270,10 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-around',
     marginVertical: 10,
+  },
+  noRecipesText: {
+    fontSize: 18,
+    fontStyle: 'italic',
+    marginTop: 20,
   },
 });
