@@ -5,6 +5,7 @@ type Recipe = {
   strMeal: string;
   strMealThumb: string;
   strInstructions: string;
+  [key: string]: string; // Dynamische Schlüssel für Zutaten und Mengenangaben
 };
 
 export default function TabTwoScreen() {
@@ -24,6 +25,25 @@ export default function TabTwoScreen() {
     }
   };
 
+  const renderIngredients = () => {
+    if (!recipe) return null;
+
+    const ingredients = [];
+    for (let i = 1; i <= 20; i++) {
+      const ingredient = recipe[`strIngredient${i}`];
+      const measure = recipe[`strMeasure${i}`];
+      if (ingredient) {
+        ingredients.push(`${ingredient} - ${measure}`);
+      }
+    }
+
+    return ingredients.map((ingredient, index) => (
+        <Text key={index} style={styles.ingredient}>
+          • {ingredient}
+        </Text>
+    ));
+  };
+
   return (
       <View style={styles.container}>
         <Text style={styles.title}>Zufälliges Rezept</Text>
@@ -39,6 +59,9 @@ export default function TabTwoScreen() {
                 <Text style={styles.recipeTitle}>{recipe.strMeal}</Text>
                 <Image source={{ uri: recipe.strMealThumb }} style={styles.recipeImage} />
                 <Text style={styles.recipeInstructions}>{recipe.strInstructions}</Text>
+                <View style={styles.ingredientContainer}>
+                  {renderIngredients()}
+                </View>
               </View>
             </ScrollView>
         )}
@@ -84,6 +107,15 @@ const styles = StyleSheet.create({
   recipeInstructions: {
     fontSize: 16,
     textAlign: 'center',
+    paddingHorizontal: 10,
+  },
+  ingredientContainer: {
+    marginTop: 20,
+    alignItems: 'flex-start',
+  },
+  ingredient: {
+    fontSize: 16,
+    textAlign: 'left',
     paddingHorizontal: 10,
   },
 });

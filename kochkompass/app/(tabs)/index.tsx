@@ -2,22 +2,37 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, ImageBackground, Button, View, FlatList, Text, TouchableWithoutFeedback, Keyboard, ActivityIndicator, Image, ScrollView } from 'react-native';
 import { Searchbar } from 'react-native-paper';
 import Header from '../../components/Header';
-import RecipeItem from '../../components/RecipeItem';
 import essenImage from '../../img/essen.png';
 
+interface Meal {
+  idMeal: string;
+  strMeal: string;
+  strMealThumb: string;
+  ingredients: string[];
+  [key: string]: any;
+}
+
 export default function TabOneScreen() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [data, setData] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [category, setCategory] = useState('');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [data, setData] = useState<Meal[]>([]);
+  const [filteredData, setFilteredData] = useState<Meal[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<Error | null>(null);
+  const [category, setCategory] = useState<string>('');
 
   useEffect(() => {
     fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=')
         .then((response) => response.json())
         .then((json) => {
-          setData(json.meals);
+          const meals: Meal[] = json.meals.map((meal: any) => {
+            let ingredients: string[] = [];
+            for (let i = 1; i <= 20; i++) {
+              const ingredient = meal[`strIngredient${i}`];
+              if (ingredient) ingredients.push(ingredient.toLowerCase());
+            }
+            return { ...meal, ingredients };
+          });
+          setData(meals);
           setLoading(false);
         })
         .catch((error) => {
@@ -26,12 +41,15 @@ export default function TabOneScreen() {
         });
   }, []);
 
-  const onChangeSearch = (query) => {
+  const onChangeSearch = (query: string) => {
     setSearchQuery(query);
     if (query) {
+      const queryLower = query.toLowerCase();
       setFilteredData(
           data.filter((item) =>
-              item.strMeal.toLowerCase().includes(query.toLowerCase())
+              item.ingredients.some((ingredient) =>
+                  ingredient.includes(queryLower)
+              )
           )
       );
     } else {
@@ -39,12 +57,20 @@ export default function TabOneScreen() {
     }
   };
 
-  const fetchCategoryData = (category) => {
+  const fetchCategoryData = (category: string) => {
     setLoading(true);
     fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`)
         .then((response) => response.json())
         .then((json) => {
-          setFilteredData(json.meals);
+          const categoryMeals: Meal[] = json.meals.map((meal: any) => {
+            let ingredients: string[] = [];
+            for (let i = 1; i <= 20; i++) {
+              const ingredient = meal[`strIngredient${i}`];
+              if (ingredient) ingredients.push(ingredient.toLowerCase());
+            }
+            return { ...meal, ingredients };
+          });
+          setFilteredData(categoryMeals);
           setLoading(false);
         })
         .catch((error) => {
@@ -53,7 +79,7 @@ export default function TabOneScreen() {
         });
   };
 
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item }: { item: Meal }) => (
       <View style={styles.item}>
         <Image source={{ uri: item.strMealThumb }} style={styles.thumbnail} />
         <Text style={styles.title}>{item.strMeal}</Text>
@@ -79,18 +105,15 @@ export default function TabOneScreen() {
             <View style={styles.container}>
               <Header headlineText="Enter your ingredients" />
               <Text style={styles.headerTitle}>Recipes</Text>
-              <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+              <View style={styles.separator} />
               <Text style={styles.contentText}>Dies ist ein zusätzlicher Textinhalt.</Text>
               <Button title="Klicken Sie mich" onPress={() => alert('Button wurde geklickt!')} />
               <Searchbar placeholder="Search" onChangeText={onChangeSearch} value={searchQuery} style={styles.searchbar} />
-
-              {/* Kategorien Buttons */}
               <View style={styles.buttonContainer}>
                 {['Beef', 'Chicken', 'Dessert', 'Pasta', 'Pork', 'Seafood', 'Vegan', 'Vegetarian'].map((cat) => (
                     <Button key={cat} title={cat} onPress={() => fetchCategoryData(cat)} />
                 ))}
               </View>
-
               <FlatList data={filteredData} keyExtractor={(item) => item.idMeal} renderItem={renderItem} contentContainerStyle={styles.list} />
             </View>
           </ImageBackground>
@@ -125,6 +148,7 @@ const styles = StyleSheet.create({
     marginVertical: 30,
     height: 1,
     width: '80%',
+    backgroundColor: '#eee', // Replace lightColor and darkColor
   },
   contentText: {
     fontSize: 16,
