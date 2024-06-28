@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, ImageBackground, Button, View, FlatList, Text, TouchableWithoutFeedback, Keyboard, ActivityIndicator, Image, ScrollView } from 'react-native';
 import { Searchbar } from 'react-native-paper';
 import Header from '../../components/Header';
-import RecipeItem from '../../components/RecipeItem';
 import essenImage from '../../img/essen.png';
 
 export default function TabOneScreen() {
@@ -17,7 +16,15 @@ export default function TabOneScreen() {
     fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=')
         .then((response) => response.json())
         .then((json) => {
-          setData(json.meals);
+          const meals = json.meals.map((meal) => {
+            let ingredients = [];
+            for (let i = 1; i <= 20; i++) {
+              const ingredient = meal[`strIngredient${i}`];
+              if (ingredient) ingredients.push(ingredient.toLowerCase());
+            }
+            return { ...meal, ingredients };
+          });
+          setData(meals);
           setLoading(false);
         })
         .catch((error) => {
@@ -29,9 +36,12 @@ export default function TabOneScreen() {
   const onChangeSearch = (query) => {
     setSearchQuery(query);
     if (query) {
+      const queryLower = query.toLowerCase();
       setFilteredData(
           data.filter((item) =>
-              item.strMeal.toLowerCase().includes(query.toLowerCase())
+              item.ingredients.some((ingredient) =>
+                  ingredient.includes(queryLower)
+              )
           )
       );
     } else {
@@ -44,7 +54,15 @@ export default function TabOneScreen() {
     fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`)
         .then((response) => response.json())
         .then((json) => {
-          setFilteredData(json.meals);
+          const categoryMeals = json.meals.map((meal) => {
+            let ingredients = [];
+            for (let i = 1; i <= 20; i++) {
+              const ingredient = meal[`strIngredient${i}`];
+              if (ingredient) ingredients.push(ingredient.toLowerCase());
+            }
+            return { ...meal, ingredients };
+          });
+          setFilteredData(categoryMeals);
           setLoading(false);
         })
         .catch((error) => {
@@ -83,14 +101,11 @@ export default function TabOneScreen() {
               <Text style={styles.contentText}>Dies ist ein zusätzlicher Textinhalt.</Text>
               <Button title="Klicken Sie mich" onPress={() => alert('Button wurde geklickt!')} />
               <Searchbar placeholder="Search" onChangeText={onChangeSearch} value={searchQuery} style={styles.searchbar} />
-
-              {/* Kategorien Buttons */}
               <View style={styles.buttonContainer}>
                 {['Beef', 'Chicken', 'Dessert', 'Pasta', 'Pork', 'Seafood', 'Vegan', 'Vegetarian'].map((cat) => (
                     <Button key={cat} title={cat} onPress={() => fetchCategoryData(cat)} />
                 ))}
               </View>
-
               <FlatList data={filteredData} keyExtractor={(item) => item.idMeal} renderItem={renderItem} contentContainerStyle={styles.list} />
             </View>
           </ImageBackground>
