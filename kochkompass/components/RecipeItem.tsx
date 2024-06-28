@@ -3,42 +3,39 @@ import { StyleSheet, View, ImageBackground, Text, TouchableOpacity } from 'react
 
 export default function RecipeItem({ item, onPress }) {
     return (
-        <TouchableOpacity onPress={() => onPress(item)}>
-            <View style={styles.recipeItem}>
-                <ImageBackground source={{ uri: item.strMealThumb }} style={styles.background}>
-                    <View style={styles.container}>
-                        <Text style={styles.title}>{item.strMeal}</Text>
-                    </View>
-                </ImageBackground>
-            </View>
+        <TouchableOpacity onPress={() => onPress(item)} style={styles.touchable}>
+            <ImageBackground source={{ uri: item.strMealThumb }} style={styles.background}>
+                <View style={styles.overlay}>
+                    <Text style={styles.title}>{item.strMeal}</Text>
+                </View>
+            </ImageBackground>
         </TouchableOpacity>
     );
 }
 
 const styles = StyleSheet.create({
-    recipeItem: {
-        backgroundColor: 'white',
+    touchable: {
+        flex: 1,
+        marginBottom: 16,
+        borderRadius: 8,
+        overflow: 'hidden',
     },
     background: {
         flex: 1,
-        resizeMode: 'cover',
         justifyContent: 'center',
-        borderRadius: 8,
+        alignItems: 'center',
         overflow: 'hidden',
-        marginBottom: 16,
+        height: 55,
     },
-    container: {
-        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Hintergrundfarbe mit Transparenz für den Text
-        padding: 10,
-        borderRadius: 8,
-        overflow: 'hidden',
+    overlay: {
+        backgroundColor: 'rgba(0, 0, 0, 0.3)',
+        padding: 15,
+        width: '100%',
     },
     title: {
-        fontSize: 18,
+        fontSize: 15,
         fontWeight: 'bold',
         color: 'white',
-        textShadowColor: 'black', // Schattierung für den Text
-        textShadowOffset: { width: 1, height: 1 },
-        textShadowRadius: 2,
+        textAlign: 'left',
     },
 });

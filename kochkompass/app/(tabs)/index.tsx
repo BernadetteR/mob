@@ -107,7 +107,6 @@ export default function TabOneScreen() {
   }
 
   if (selectedRecipe) {
-    // Zeige die Detailansicht, wenn ein Rezept ausgewählt ist
     return (
         <RecipeDetailScreen recipe={selectedRecipe} onBackPress={handleBackPress} />
     );
