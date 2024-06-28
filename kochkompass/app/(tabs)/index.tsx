@@ -75,12 +75,7 @@ export default function TabOneScreen() {
             return { ...meal, ingredients };
           });
 
-          // Filtere nur die Rezepte heraus, für die auch eine Zutatenliste vorhanden ist
-          const filteredCategoryMeals = categoryMeals.filter((meal) =>
-              data.some((fullMeal) => fullMeal.idMeal === meal.idMeal && fullMeal.ingredients.length > 0)
-          );
-
-          setFilteredData(filteredCategoryMeals);
+          setFilteredData(categoryMeals);
           setLoading(false);
         })
         .catch((error) => {
@@ -89,16 +84,30 @@ export default function TabOneScreen() {
         });
   };
 
-
   const handlePress = (item: Meal) => {
-    // Überprüfe, ob das ausgewählte Rezept bereits vollständige Informationen hat
+    setLoading(true);
     const selectedId = item.idMeal;
-    const matchedRecipe = data.find((meal) => meal.idMeal === selectedId);
-    if (matchedRecipe) {
-      setSelectedRecipe(matchedRecipe);
-    } else {
-      setSelectedRecipe(item);
-    }
+    const firstLetter = item.strMeal.charAt(0).toLowerCase(); // Anfangsbuchstabe des Rezeptnamens
+
+    fetch(`https://www.themealdb.com/api/json/v1/1/search.php?f=${firstLetter}`)
+        .then((response) => response.json())
+        .then((secondJson) => {
+          const secondMeals: Meal[] = secondJson.meals || [];
+
+          const matchedRecipe = secondMeals.find((meal) => meal.idMeal === selectedId);
+
+          if (matchedRecipe) {
+            setSelectedRecipe(matchedRecipe);
+          } else {
+            setSelectedRecipe(item);
+          }
+
+          setLoading(false);
+        })
+        .catch((error) => {
+          setError(error);
+          setLoading(false);
+        });
   };
 
   const handleBackPress = () => {
@@ -140,7 +149,7 @@ export default function TabOneScreen() {
               <Button title="Klicken Sie mich" onPress={() => alert('Button wurde geklickt!')} />
               <Searchbar placeholder="Search" onChangeText={onChangeSearch} value={searchQuery} style={styles.searchbar} />
               <View style={styles.buttonContainer}>
-                {['Beef', 'Chicken', 'Dessert', 'Pasta', 'Pork', 'Seafood', 'Side', 'Vegetarian', 'Miscellaneous' ].map((cat) => (
+                {['Beef', 'Chicken', 'Dessert', 'Pasta', 'Pork', 'Seafood', 'Vegetarian', 'Vegan' ].map((cat) => (
                     <Button key={cat} title={cat} onPress={() => fetchCategoryData(cat)} />
                 ))}
               </View>
