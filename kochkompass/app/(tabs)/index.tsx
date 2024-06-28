@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, ImageBackground, Button, View, FlatList, Text, TouchableWithoutFeedback, Keyboard, ActivityIndicator, ScrollView, TouchableOpacity } from 'react-native';
+import { StyleSheet, ImageBackground, Button, View, FlatList, Text, TouchableWithoutFeedback, Keyboard, ActivityIndicator, ScrollView } from 'react-native';
 import { Searchbar } from 'react-native-paper';
 import Header from '../../components/Header';
-import RecipeItem from '../../components/RecipeItem'; // Importiere die RecipeItem-Komponente
-import RecipeDetailScreen from '../../components/RecipeDetailScreen'; // Importiere die RecipeDetailScreen-Komponente
+import RecipeItem from '../../components/RecipeItem';
+import RecipeDetailScreen from '../../components/RecipeDetailScreen';
 import essenImage from '../../img/essen.png';
 
 interface Meal {
@@ -11,6 +11,8 @@ interface Meal {
   strMeal: string;
   strMealThumb: string;
   ingredients: string[];
+  strInstructions?: string;
+  strYoutube?: string;
   [key: string]: any;
 }
 
@@ -20,7 +22,6 @@ export default function TabOneScreen() {
   const [filteredData, setFilteredData] = useState<Meal[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
-  const [category, setCategory] = useState<string>('');
   const [selectedRecipe, setSelectedRecipe] = useState<Meal | null>(null); // Zustand für ausgewähltes Rezept
 
   useEffect(() => {
@@ -73,7 +74,13 @@ export default function TabOneScreen() {
             }
             return { ...meal, ingredients };
           });
-          setFilteredData(categoryMeals);
+
+          // Filtere nur die Rezepte heraus, für die auch eine Zutatenliste vorhanden ist
+          const filteredCategoryMeals = categoryMeals.filter((meal) =>
+              data.some((fullMeal) => fullMeal.idMeal === meal.idMeal && fullMeal.ingredients.length > 0)
+          );
+
+          setFilteredData(filteredCategoryMeals);
           setLoading(false);
         })
         .catch((error) => {
@@ -82,8 +89,16 @@ export default function TabOneScreen() {
         });
   };
 
+
   const handlePress = (item: Meal) => {
-    setSelectedRecipe(item); // Setze das ausgewählte Rezept
+    // Überprüfe, ob das ausgewählte Rezept bereits vollständige Informationen hat
+    const selectedId = item.idMeal;
+    const matchedRecipe = data.find((meal) => meal.idMeal === selectedId);
+    if (matchedRecipe) {
+      setSelectedRecipe(matchedRecipe);
+    } else {
+      setSelectedRecipe(item);
+    }
   };
 
   const handleBackPress = () => {
@@ -91,7 +106,7 @@ export default function TabOneScreen() {
   };
 
   const renderItem = ({ item }: { item: Meal }) => (
-      <RecipeItem item={item} onPress={handlePress} /> // Verwende die RecipeItem-Komponente
+      <RecipeItem item={item} onPress={handlePress} />
   );
 
   if (loading) {
@@ -125,7 +140,7 @@ export default function TabOneScreen() {
               <Button title="Klicken Sie mich" onPress={() => alert('Button wurde geklickt!')} />
               <Searchbar placeholder="Search" onChangeText={onChangeSearch} value={searchQuery} style={styles.searchbar} />
               <View style={styles.buttonContainer}>
-                {['Beef', 'Chicken', 'Dessert', 'Pasta', 'Pork', 'Seafood', 'Vegan', 'Vegetarian'].map((cat) => (
+                {['Beef', 'Chicken', 'Dessert', 'Pasta', 'Pork', 'Seafood', 'Side', 'Vegetarian', 'Miscellaneous' ].map((cat) => (
                     <Button key={cat} title={cat} onPress={() => fetchCategoryData(cat)} />
                 ))}
               </View>
