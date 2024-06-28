@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Button, Text, View, ActivityIndicator, Image, ScrollView } from 'react-native';
+import { WebView } from 'react-native-webview';
 
 type Recipe = {
   strMeal: string;
   strMealThumb: string;
   strInstructions: string;
-  [key: string]: string; // Dynamische Schlüssel für Zutaten und Mengenangaben
+  strYoutube: string;
+  [key: string]: string;
 };
 
 export default function TabTwoScreen() {
@@ -58,9 +60,15 @@ export default function TabTwoScreen() {
               <View style={styles.recipeContainer}>
                 <Text style={styles.recipeTitle}>{recipe.strMeal}</Text>
                 <Image source={{ uri: recipe.strMealThumb }} style={styles.recipeImage} />
-                <Text style={styles.recipeInstructions}>{recipe.strInstructions}</Text>
                 <View style={styles.ingredientContainer}>
                   {renderIngredients()}
+                </View>
+                <Text style={styles.recipeInstructions}>{recipe.strInstructions}</Text>
+                <View style={styles.videoContainer}>
+                  <WebView
+                      style={styles.video}
+                      source={{ uri: recipe.strYoutube.replace("watch?v=", "embed/") }}
+                  />
                 </View>
               </View>
             </ScrollView>
@@ -108,6 +116,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
     paddingHorizontal: 10,
+  },
+  videoContainer: {
+    width: '100%',
+    aspectRatio: 16 / 9, // Adjust aspect ratio as needed
+    marginTop: 20,
+    marginBottom: 20,
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  video: {
+    flex: 1,
   },
   ingredientContainer: {
     marginTop: 20,

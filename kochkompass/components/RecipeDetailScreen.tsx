@@ -3,6 +3,22 @@ import { StyleSheet, View, Text, Image, ImageBackground, TouchableOpacity, Scrol
 import { WebView } from 'react-native-webview';
 
 export default function RecipeDetailScreen({ recipe, onBackPress }) {
+    const renderIngredients = () => {
+        const ingredients = [];
+        for (let i = 1; i <= 20; i++) {
+            const ingredient = recipe[`strIngredient${i}`];
+            const measure = recipe[`strMeasure${i}`];
+            if (ingredient) {
+                ingredients.push(`${ingredient} - ${measure}`);
+            }
+        }
+        return ingredients.map((ingredient, index) => (
+            <Text key={index} style={styles.ingredient}>
+                • {ingredient}
+            </Text>
+        ));
+    };
+
     return (
         <ImageBackground source={{ uri: recipe.strMealThumb }} style={styles.background}>
             <ScrollView contentContainerStyle={styles.container}>
@@ -13,6 +29,10 @@ export default function RecipeDetailScreen({ recipe, onBackPress }) {
                     <Text style={styles.title}>{recipe.strMeal}</Text>
                     <Text style={styles.category}>{recipe.strCategory}</Text>
                     <Image source={{ uri: recipe.strMealThumb }} style={styles.thumbnail} />
+                    <View style={styles.ingredientsContainer}>
+                        <Text style={styles.sectionTitle}>Ingredients:</Text>
+                        {renderIngredients()}
+                    </View>
                     <Text style={styles.instructions}>{recipe.strInstructions}</Text>
                     <WebView
                         style={styles.video}
@@ -59,6 +79,19 @@ const styles = StyleSheet.create({
         height: 200,
         borderRadius: 8,
         marginBottom: 20,
+    },
+    ingredientsContainer: {
+        marginTop: 10,
+    },
+    sectionTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 10,
+    },
+    ingredient: {
+        fontSize: 16,
+        color: 'black',
+        marginBottom: 5,
     },
     instructions: {
         fontSize: 16,
