@@ -3,7 +3,6 @@ import { StyleSheet, ImageBackground, Button, View, FlatList, Text, TouchableWit
 import { Searchbar } from 'react-native-paper';
 import Header from '../../components/Header';
 import RecipeItem from '../../components/RecipeItem';
-
 import essenImage from '../../img/essen.png';
 
 export default function TabOneScreen() {
@@ -12,6 +11,7 @@ export default function TabOneScreen() {
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [category, setCategory] = useState('');
 
   useEffect(() => {
     fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=')
@@ -26,17 +26,31 @@ export default function TabOneScreen() {
         });
   }, []);
 
-  const onChangeSearch = query => {
+  const onChangeSearch = (query) => {
     setSearchQuery(query);
     if (query) {
       setFilteredData(
-          data.filter(item =>
+          data.filter((item) =>
               item.strMeal.toLowerCase().includes(query.toLowerCase())
           )
       );
     } else {
       setFilteredData([]);
     }
+  };
+
+  const fetchCategoryData = (category) => {
+    setLoading(true);
+    fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`)
+        .then((response) => response.json())
+        .then((json) => {
+          setFilteredData(json.meals);
+          setLoading(false);
+        })
+        .catch((error) => {
+          setError(error);
+          setLoading(false);
+        });
   };
 
   const renderItem = ({ item }) => (
@@ -61,41 +75,23 @@ export default function TabOneScreen() {
   return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
-          <ImageBackground
-              source={essenImage}
-              style={styles.background}
-          >
-
+          <ImageBackground source={essenImage} style={styles.background}>
             <View style={styles.container}>
               <Header headlineText="Enter your ingredients" />
-
               <Text style={styles.headerTitle}>Recipes</Text>
               <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-
-              {/* Zusätzlicher Text */}
               <Text style={styles.contentText}>Dies ist ein zusätzlicher Textinhalt.</Text>
+              <Button title="Klicken Sie mich" onPress={() => alert('Button wurde geklickt!')} />
+              <Searchbar placeholder="Search" onChangeText={onChangeSearch} value={searchQuery} style={styles.searchbar} />
 
-              {/* Button hinzufügen */}
-              <Button
-                  title="Klicken Sie mich"
-                  onPress={() => alert('Button wurde geklickt!')}
-              />
+              {/* Kategorien Buttons */}
+              <View style={styles.buttonContainer}>
+                {['Beef', 'Chicken', 'Dessert', 'Pasta', 'Pork', 'Seafood', 'Vegan', 'Vegetarian'].map((cat) => (
+                    <Button key={cat} title={cat} onPress={() => fetchCategoryData(cat)} />
+                ))}
+              </View>
 
-              {/* Searchbar hinzufügen */}
-              <Searchbar
-                  placeholder="Search"
-                  onChangeText={onChangeSearch}
-                  value={searchQuery}
-                  style={styles.searchbar}
-              />
-
-              {/* FlatList hinzufügen */}
-              <FlatList
-                  data={filteredData}
-                  keyExtractor={item => item.idMeal}
-                  renderItem={renderItem}
-                  contentContainerStyle={styles.list}
-              />
+              <FlatList data={filteredData} keyExtractor={(item) => item.idMeal} renderItem={renderItem} contentContainerStyle={styles.list} />
             </View>
           </ImageBackground>
         </ScrollView>
@@ -168,10 +164,10 @@ const styles = StyleSheet.create({
     color: 'red',
     fontSize: 18,
   },
-  emptyText: {
-    fontSize: 16,
-    color: '#333',
-    textAlign: 'center',
-    marginTop: 20,
+  buttonContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    marginVertical: 10,
   },
 });
