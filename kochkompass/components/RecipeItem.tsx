@@ -1,16 +1,17 @@
 import React from 'react';
-import { StyleSheet, View, ImageBackground, Text } from 'react-native';
+import { StyleSheet, View, ImageBackground, Text, TouchableOpacity } from 'react-native';
 
-export default function RecipeItem({ item }) {
+export default function RecipeItem({ item, onPress }) {
     return (
-        <View style={styles.recipeItem}>
-            <ImageBackground source={{ uri: item.strMealThumb }} style={styles.background}>
-                <View style={styles.container}>
-                    <Text style={styles.title}>{item.strMeal}</Text>
-                </View>
-            </ImageBackground>
-        </View>
-
+        <TouchableOpacity onPress={() => onPress(item)}>
+            <View style={styles.recipeItem}>
+                <ImageBackground source={{ uri: item.strMealThumb }} style={styles.background}>
+                    <View style={styles.container}>
+                        <Text style={styles.title}>{item.strMeal}</Text>
+                    </View>
+                </ImageBackground>
+            </View>
+        </TouchableOpacity>
     );
 }
 
