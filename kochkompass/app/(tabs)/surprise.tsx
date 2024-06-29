@@ -11,6 +11,7 @@ import {
   TouchableWithoutFeedback
 } from 'react-native';
 import { WebView } from 'react-native-webview';
+import Header from "@/components/Header";
 
 type Recipe = {
   strMeal: string;
@@ -57,9 +58,10 @@ export default function TabTwoScreen() {
   };
 
   return (
-
+      <View>
+        <Header headlineText="Surprise Me" />
         <View style={styles.container}>
-          <Text style={styles.title}>Zufälliges Rezept</Text>
+
           <View style={styles.separator} />
 
           <Button title="Neues Rezept laden" onPress={fetchRandomRecipe} />
@@ -85,7 +87,7 @@ export default function TabTwoScreen() {
               </ScrollView>
           )}
         </View>
-
+      </View>
   );
 }
 

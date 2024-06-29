@@ -175,9 +175,10 @@ export default function TabOneScreen() {
 
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
-
+          <View>
+            <Header headlineText="Enter your ingredients" />
             <View style={styles.container}>
-              <Header headlineText="Enter your ingredients" />
+
               <Text style={styles.headerTitle}>Recipes</Text>
               <View style={styles.separator} />
               <Text style={styles.contentText}>Dies ist ein zusätzlicher Textinhalt.</Text>
@@ -194,7 +195,7 @@ export default function TabOneScreen() {
                   <Text style={styles.noRecipesText}>No recipes found.</Text>
               )}
             </View>
-
+        </View>
         </ScrollView>
       </TouchableWithoutFeedback>
 

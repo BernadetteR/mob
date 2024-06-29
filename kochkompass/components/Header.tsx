@@ -1,58 +1,62 @@
 import React from 'react';
-import { StyleSheet, Image, View, Text, StatusBar, SafeAreaView, Platform } from 'react-native';
+import { StyleSheet, Image, View, Text, StatusBar, SafeAreaView } from 'react-native';
 
 // Logo importieren
-import logo from '../img/logo.jpeg';
+import logo from '../img/logo.png';
 
-export default function Header({ headlineText, onInfoPress }) {
+// Headline wird mitgegeben
+export default function Header(props) {
     return (
-        <SafeAreaView style={styles.safeArea}>
+        <View style={styles.header}>
             <StatusBar backgroundColor="#02A382" barStyle="light-content" />
-            <View style={styles.header}>
-                <Image source={logo} style={styles.logo} />
-                <Text style={styles.headline}>{headlineText}</Text>
-                <View style={styles.infoButtonContainer}>
-                    <FontAwesome5
-                        name="info-circle"
-                        size={25}
-                        color="white"
-                        onPress={onInfoPress}
-                    />
-                </View>
-            </View>
-        </SafeAreaView>
+            <Image source={logo} style={styles.logo} />
+            <Text style={styles.container}>{props.headlineText}</Text>
+        </View>
     );
 }
 
+// Die Styles für die Header-Komponente
 const styles = StyleSheet.create({
-    safeArea: {
-        backgroundColor: '#02A382',
-    },
     header: {
+        width: '100%',
         backgroundColor: '#02A382',
-        justifyContent: 'center',
         alignItems: 'center',
+        justifyContent: 'center',
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,
-        paddingBottom: 20,
-        paddingTop: Platform.OS === 'android' ? 30 : 10, // mehr Padding für Android
-        width: '100%',
+        paddingVertical: 20, // Verringert die Höhe des Headers
+    },
+    logoTextContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     logo: {
-        position: 'absolute',
-        top: 10,
-        left: 10,
-        width: 50,
-        height: 50,
-        resizeMode: 'contain', // Verhindert, dass das Bild verzerrt wird
+        width: 300, // Verkleinert das Logo
+        height: 200,
+        resizeMode: 'contain',
+        marginRight: 10,
     },
     headline: {
         color: 'white',
         fontSize: 24,
     },
-    infoButtonContainer: {
+    container: {
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        width: 270,
+        alignItems: 'center',
+        borderRadius: 20,
+        paddingLeft: 20,
+        paddingRight: 20,
+        paddingTop: 10,
+        paddingBottom: 10,
+        borderColor: 'black',
         position: 'absolute',
-        top: 10,
-        right: 10,
-    },
+        bottom: -20,
+        zIndex: 1,
+        fontWeight: 'bold',
+        fontSize: 20,
+        textAlign: 'center',
+    }
 });
