@@ -158,8 +158,8 @@ const styles = StyleSheet.create({
     },
     map: {
         flex: 1,
-        marginTop: 30,
-        margin: 10,
+        marginTop: 40,
+        margin: 20,
     },
     selectedStoreContainer: {
         position: 'absolute',

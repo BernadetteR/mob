@@ -25,12 +25,11 @@ export default function TabTwoScreen() {
         <View style={[globalStyles.globalContainer, styles.mainContainer]}>
             <Header headlineText="My Favorites" />
             <View style={styles.container}>
-                <Text style={styles.title}>Zufälliges Rezept</Text>
-                <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+                <Text style={globalStyles.globalHeadline}>Have a look on your saved recipes</Text>
                 <CustomButton title="Neues Rezept laden" onPress={fetchRandomRecipe} />
                 {loading && <ActivityIndicator size="large" color="#0000ff" />}
                 {recipe && (
-                    <ScrollView contentContainerStyle={styles.scrollContainer}>
+                    <ScrollView contentContainerStyle={globalStyles.globalScrollContainer}>
                         <View style={styles.recipeContainer}>
                             <Text style={styles.recipeTitle}>{recipe.strMeal}</Text>
                             <Image source={{ uri: recipe.strMealThumb }} style={styles.recipeImage} />
@@ -56,14 +55,6 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         fontWeight: 'bold',
-    },
-    separator: {
-        marginVertical: 30,
-        height: 1,
-        width: '80%',
-    },
-    scrollContainer: {
-        alignItems: 'center',
     },
     recipeContainer: {
         marginTop: 20,

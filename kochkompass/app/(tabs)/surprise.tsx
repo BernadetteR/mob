@@ -55,6 +55,7 @@ export default function TabTwoScreen() {
       <View style={[globalStyles.globalContainer, styles.mainContainer]}>
         <Header headlineText="Surprise Me" />
         <View style={styles.container}>
+          <Text style={globalStyles.globalHeadline}>Don't know what to cook?{'\n'}Get a random recipe!</Text>
 
           <CustomButton title="Neues Rezept laden" onPress={fetchRandomRecipe} />
           {loading && <ActivityIndicator size="large" color="#0000ff" />}

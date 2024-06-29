@@ -3,6 +3,7 @@ import {StyleSheet} from "react-native";
 export const globalStyles = StyleSheet.create({
     globalContainer: {
         backgroundColor: 'white',
+        flex: 1,
     },
     globalHeadline: {
         fontSize: 25,
@@ -15,6 +16,8 @@ export const globalStyles = StyleSheet.create({
         borderRadius: 20,
         textTransform: 'uppercase',
         color: 'white',
+        minWidth: 120,
+        alignItems: 'center',
     },
     globalScrollContainer: {
         flexGrow: 1,

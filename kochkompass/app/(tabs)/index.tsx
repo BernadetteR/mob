@@ -223,15 +223,6 @@ const styles = StyleSheet.create({
   },
   searchbar: {
     marginTop: 40,
-    marginVertical: 20,
-    width: '100%',
-  },
-  item: {
-    flexDirection: 'row',
-    marginBottom: 10,
-    backgroundColor: '#f9f9f9',
-    padding: 10,
-    borderRadius: 5,
   },
   errorContainer: {
     flex: 1,
