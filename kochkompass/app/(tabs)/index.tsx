@@ -177,7 +177,7 @@ export default function TabOneScreen() {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={globalStyles.globalContainer}>
             <Header headlineText="Enter your ingredients" />
-            <Searchbar placeholder="Search" onChangeText={onChangeSearch} value={searchQuery} style={styles.searchbar} />
+            <Searchbar placeholder="search by ingredient" onChangeText={onChangeSearch} value={searchQuery} style={styles.searchbar} />
 
             <ScrollView contentContainerStyle={globalStyles.globalScrollContainer}>
             <View style={styles.container}>
@@ -194,11 +194,9 @@ export default function TabOneScreen() {
                     <Text style={styles.noRecipesText}>No recipes found.</Text>
                 )}
 
-
             </View>
             </ScrollView>
         </View>
-
       </TouchableWithoutFeedback>
 
   );
@@ -211,10 +209,6 @@ const styles = StyleSheet.create({
   list: {
     padding: 10,
   },
-  background: {
-    flex: 1,
-    resizeMode: 'cover',
-  },
   container: {
     flex: 1,
     alignItems: 'center',
@@ -222,7 +216,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   searchbar: {
-    marginTop: 40,
+    marginTop: -30,
+    marginRight: 50,
+    marginLeft: 50,
+    backgroundColor: '#ECECEC',
   },
   errorContainer: {
     flex: 1,

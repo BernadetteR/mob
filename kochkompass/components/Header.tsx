@@ -48,11 +48,11 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: -20,
         zIndex: 1,
-        elevation: 5, // Android-Schatten (erfordert elevation)
-        shadowColor: 'black', // iOS-Schattenfarbe
-        shadowOffset: { width: 0, height: 2 }, // iOS-Schattenversatz
-        shadowOpacity: 0.3, // iOS-Schattenopazität
-        shadowRadius: 2, // iOS-Schattenradius
+        elevation: 5,
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 2,
         fontWeight: 'bold',
         fontSize: 20,
         textAlign: 'center',
