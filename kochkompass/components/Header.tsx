@@ -26,16 +26,12 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 20,
         paddingVertical: 20, // Verringert die Höhe des Headers
     },
-    logoTextContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
     logo: {
         width: 300, // Verkleinert das Logo
-        height: 200,
+        height: 180,
         resizeMode: 'contain',
-        marginRight: 10,
+        marginRight: 20,
+        marginTop: -20,
     },
     headline: {
         color: 'white',
