@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
         height: 180,
         resizeMode: 'contain',
         marginRight: 20,
-        marginTop: -20,
+        marginTop: -40,
     },
     headline: {
         color: 'white',
@@ -43,14 +43,16 @@ const styles = StyleSheet.create({
         width: 270,
         alignItems: 'center',
         borderRadius: 20,
-        paddingLeft: 20,
-        paddingRight: 20,
-        paddingTop: 10,
-        paddingBottom: 10,
+        padding: 10,
         borderColor: 'black',
         position: 'absolute',
         bottom: -20,
         zIndex: 1,
+        elevation: 5, // Android-Schatten (erfordert elevation)
+        shadowColor: 'black', // iOS-Schattenfarbe
+        shadowOffset: { width: 0, height: 2 }, // iOS-Schattenversatz
+        shadowOpacity: 0.3, // iOS-Schattenopazität
+        shadowRadius: 2, // iOS-Schattenradius
         fontWeight: 'bold',
         fontSize: 20,
         textAlign: 'center',

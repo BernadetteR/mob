@@ -4,7 +4,7 @@ import { Searchbar } from 'react-native-paper';
 import Header from '../../components/Header';
 import RecipeItem from '../../components/RecipeItem';
 import RecipeDetailScreen from '../../components/RecipeDetailScreen';
-import essenImage from '../../img/essen.png';
+import {globalStyles} from "@/styles/global";
 
 interface Meal {
   idMeal: string;
@@ -175,7 +175,7 @@ export default function TabOneScreen() {
 
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
-          <View>
+          <View style={globalStyles.globalContainer}>
             <Header headlineText="Enter your ingredients" />
             <View style={styles.container}>
 
@@ -217,8 +217,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.8)', // Optional: Hintergrundfarbe mit Transparenz
     paddingHorizontal: 20,
+    marginTop: 30,
   },
   headerTitle: {
     fontSize: 20,

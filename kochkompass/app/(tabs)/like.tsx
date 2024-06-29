@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Button, Text, View, ActivityIndicator, Image, ScrollView } from 'react-native';
+import Header from "@/components/Header";
+import {globalStyles} from "@/styles/global";
 
 export default function TabTwoScreen() {
     const [recipe, setRecipe] = useState(null);
@@ -19,28 +21,31 @@ export default function TabTwoScreen() {
     };
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Zufälliges Rezept</Text>
-            <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-
-            <Button title="Neues Rezept laden" onPress={fetchRandomRecipe} />
-
-            {loading && <ActivityIndicator size="large" color="#0000ff" />}
-
-            {recipe && (
-                <ScrollView contentContainerStyle={styles.scrollContainer}>
-                    <View style={styles.recipeContainer}>
-                        <Text style={styles.recipeTitle}>{recipe.strMeal}</Text>
-                        <Image source={{ uri: recipe.strMealThumb }} style={styles.recipeImage} />
-                        <Text style={styles.recipeInstructions}>{recipe.strInstructions}</Text>
-                    </View>
-                </ScrollView>
-            )}
+        <View style={[globalStyles.globalContainer, styles.mainContainer]}>
+            <Header headlineText="My Favorites" />
+            <View style={styles.container}>
+                <Text style={styles.title}>Zufälliges Rezept</Text>
+                <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+                <Button title="Neues Rezept laden" onPress={fetchRandomRecipe} />
+                {loading && <ActivityIndicator size="large" color="#0000ff" />}
+                {recipe && (
+                    <ScrollView contentContainerStyle={styles.scrollContainer}>
+                        <View style={styles.recipeContainer}>
+                            <Text style={styles.recipeTitle}>{recipe.strMeal}</Text>
+                            <Image source={{ uri: recipe.strMealThumb }} style={styles.recipeImage} />
+                            <Text style={styles.recipeInstructions}>{recipe.strInstructions}</Text>
+                        </View>
+                    </ScrollView>
+                )}
+            </View>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
+    mainContainer: {
+        flex: 1,
+    },
     container: {
         flex: 1,
         alignItems: 'center',

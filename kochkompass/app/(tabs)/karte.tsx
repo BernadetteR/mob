@@ -3,6 +3,8 @@ import { StyleSheet, View, Text, ActivityIndicator } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import axios from 'axios';
+import Header from "@/components/Header";
+import {globalStyles} from "@/styles/global";
 
 type LocationObject = {
     coords: {
@@ -78,7 +80,7 @@ export default function TabTwoScreen() {
 
     if (errorMsg) {
         return (
-            <View style={styles.container}>
+            <View style={styles.errorContainer}>
                 <Text style={styles.title}>Error</Text>
                 <Text>{errorMsg}</Text>
             </View>
@@ -87,14 +89,15 @@ export default function TabTwoScreen() {
 
     if (!location) {
         return (
-            <View style={styles.container}>
+            <View style={styles.loadingContainer}>
                 <ActivityIndicator size="large" />
             </View>
         );
     }
 
     return (
-        <View style={styles.container}>
+        <View style={[globalStyles.globalContainer, styles.container]}>
+            <Header headlineText="Closest Shops" />
             <MapView
                 style={styles.map}
                 initialRegion={{
@@ -138,6 +141,14 @@ export default function TabTwoScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    errorContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    loadingContainer: {
+        flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -146,8 +157,9 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     map: {
-        width: '100%',
-        height: '70%',
+        flex: 1,
+        marginTop: 30,
+        margin: 10,
     },
     selectedStoreContainer: {
         position: 'absolute',

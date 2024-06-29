@@ -1,17 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import {
-  StyleSheet,
-  Button,
-  Text,
-  View,
-  ActivityIndicator,
-  Image,
-  ScrollView,
-  Keyboard,
-  TouchableWithoutFeedback
+  StyleSheet, Button, Text, View, ActivityIndicator, Image, ScrollView, Keyboard, TouchableWithoutFeedback
 } from 'react-native';
 import { WebView } from 'react-native-webview';
 import Header from "@/components/Header";
+import { globalStyles } from "@/styles/global";
 
 type Recipe = {
   strMeal: string;
@@ -58,16 +51,12 @@ export default function TabTwoScreen() {
   };
 
   return (
-      <View>
+      <View style={[globalStyles.globalContainer, styles.mainContainer]}>
         <Header headlineText="Surprise Me" />
         <View style={styles.container}>
-
           <View style={styles.separator} />
-
           <Button title="Neues Rezept laden" onPress={fetchRandomRecipe} />
-
           {loading && <ActivityIndicator size="large" color="#0000ff" />}
-
           {recipe && (
               <ScrollView contentContainerStyle={styles.scrollContainer}>
                 <View style={styles.recipeContainer}>
@@ -92,6 +81,9 @@ export default function TabTwoScreen() {
 }
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     alignItems: 'center',
