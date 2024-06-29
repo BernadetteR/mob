@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, Image, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
 import { WebView } from 'react-native-webview';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function RecipeDetailScreen({ recipe, onBackPress }) {
     const renderIngredients = () => {
@@ -26,7 +27,10 @@ export default function RecipeDetailScreen({ recipe, onBackPress }) {
                     <Text style={styles.backButtonText}>← Back</Text>
                 </TouchableOpacity>
                 <View style={styles.overlay}>
-                    <Text style={styles.title}>{recipe.strMeal}</Text>
+                    <View style={styles.headlineIcon}>
+                        <Text style={styles.title}>{recipe.strMeal}</Text>
+                        <Ionicons name="heart-outline" size={30} color="black" style={styles.icon} />
+                    </View>
                     <Text style={styles.category}>{recipe.strCategory}</Text>
                     <Image source={{ uri: recipe.strMealThumb }} style={styles.thumbnail} />
                     <View style={styles.ingredientsContainer}>
@@ -115,5 +119,13 @@ const styles = StyleSheet.create({
         height: 200,
         marginTop: 20,
         marginBottom: 20,
+    },
+    headlineIcon: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    icon: {
+        marginLeft: 10,
     },
 });
