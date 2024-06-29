@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, ImageBackground, Text, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function RecipeItem({ item, onPress }) {
     return (
@@ -7,6 +8,7 @@ export default function RecipeItem({ item, onPress }) {
             <ImageBackground source={{ uri: item.strMealThumb }} style={styles.background}>
                 <View style={styles.overlay}>
                     <Text style={styles.title}>{item.strMeal}</Text>
+                    <Ionicons name="heart-outline" size={20} color="white" style={styles.icon} />
                 </View>
             </ImageBackground>
         </TouchableOpacity>
@@ -31,11 +33,17 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.3)',
         padding: 15,
         width: '100%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
     },
     title: {
         fontSize: 15,
         fontWeight: 'bold',
         color: 'white',
         textAlign: 'left',
+    },
+    icon: {
+        marginLeft: 10, // Abstand zwischen dem Text und dem Icon
     },
 });
