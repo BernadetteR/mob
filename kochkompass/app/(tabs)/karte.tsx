@@ -23,7 +23,7 @@ type Store = {
     };
 };
 
-export default function TabThreeScreen() {
+export default function TabTwoScreen() {
     const [location, setLocation] = useState<LocationObject | null>(null);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
     const [stores, setStores] = useState<Store[]>([]);

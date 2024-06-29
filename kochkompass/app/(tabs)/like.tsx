@@ -4,7 +4,7 @@ import Header from "@/components/Header";
 import {globalStyles} from "@/styles/global";
 import CustomButton from "@/components/CustomButton";
 
-export default function TabFourScreen() {
+export default function TabTwoScreen() {
     const [recipe, setRecipe] = useState(null);
     const [loading, setLoading] = useState(false);
 
