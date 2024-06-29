@@ -1,26 +1,31 @@
 import React from 'react';
-import { StyleSheet, Image, View, Text, StatusBar, SafeAreaView } from 'react-native';
+import { StyleSheet, Image, View, Text, StatusBar, SafeAreaView, Platform } from 'react-native';
 
 // Logo importieren
 import logo from '../img/logo.jpeg';
 
-// Headline wird mitgegeben
-export default function Header(props) {
+export default function Header({ headlineText, onInfoPress }) {
     return (
         <SafeAreaView style={styles.safeArea}>
             <StatusBar backgroundColor="#02A382" barStyle="light-content" />
             <View style={styles.header}>
                 <Image source={logo} style={styles.logo} />
-                <Text style={styles.headline}>{props.headlineText}</Text>
+                <Text style={styles.headline}>{headlineText}</Text>
+                <View style={styles.infoButtonContainer}>
+                    <FontAwesome5
+                        name="info-circle"
+                        size={25}
+                        color="white"
+                        onPress={onInfoPress}
+                    />
+                </View>
             </View>
         </SafeAreaView>
     );
 }
 
-// Die Styles für die Header-Komponente
 const styles = StyleSheet.create({
     safeArea: {
-        flex: 0,
         backgroundColor: '#02A382',
     },
     header: {
@@ -30,7 +35,8 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,
         paddingBottom: 20,
-        paddingTop: 10,
+        paddingTop: Platform.OS === 'android' ? 30 : 10, // mehr Padding für Android
+        width: '100%',
     },
     logo: {
         position: 'absolute',
@@ -43,5 +49,10 @@ const styles = StyleSheet.create({
     headline: {
         color: 'white',
         fontSize: 24,
+    },
+    infoButtonContainer: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
     },
 });

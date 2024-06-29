@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import {StyleSheet, Button, Text, View, ActivityIndicator, Image, ScrollView, Keyboard} from 'react-native';
+import {
+  StyleSheet,
+  Button,
+  Text,
+  View,
+  ActivityIndicator,
+  Image,
+  ScrollView,
+  Keyboard,
+  TouchableWithoutFeedback
+} from 'react-native';
 import { WebView } from 'react-native-webview';
 
 type Recipe = {
@@ -47,7 +57,7 @@ export default function TabTwoScreen() {
   };
 
   return (
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+
         <View style={styles.container}>
           <Text style={styles.title}>Zufälliges Rezept</Text>
           <View style={styles.separator} />
@@ -75,7 +85,7 @@ export default function TabTwoScreen() {
               </ScrollView>
           )}
         </View>
-      </TouchableWithoutFeedback>
+
   );
 }
 

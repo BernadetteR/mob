@@ -172,9 +172,10 @@ export default function TabOneScreen() {
   }
 
   return (
+
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
-          <ImageBackground source={essenImage} style={styles.background}>
+
             <View style={styles.container}>
               <Header headlineText="Enter your ingredients" />
               <Text style={styles.headerTitle}>Recipes</Text>
@@ -193,9 +194,10 @@ export default function TabOneScreen() {
                   <Text style={styles.noRecipesText}>No recipes found.</Text>
               )}
             </View>
-          </ImageBackground>
+
         </ScrollView>
       </TouchableWithoutFeedback>
+
   );
 }
 
