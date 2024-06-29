@@ -48,7 +48,7 @@ export default function TabLayout() {
                 }}
             />
             <Tabs.Screen
-                name="two"
+                name="surprise"
                 options={{
                     title: 'Surprise',
                     tabBarIcon: ({ color }) => <TabBarIcon name="question" color={color} />,

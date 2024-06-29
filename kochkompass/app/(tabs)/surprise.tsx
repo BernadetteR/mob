@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Button, Text, View, ActivityIndicator, Image, ScrollView } from 'react-native';
+import {StyleSheet, Button, Text, View, ActivityIndicator, Image, ScrollView, Keyboard} from 'react-native';
 import { WebView } from 'react-native-webview';
 
 type Recipe = {
@@ -47,33 +47,35 @@ export default function TabTwoScreen() {
   };
 
   return (
-      <View style={styles.container}>
-        <Text style={styles.title}>Zufälliges Rezept</Text>
-        <View style={styles.separator} />
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.container}>
+          <Text style={styles.title}>Zufälliges Rezept</Text>
+          <View style={styles.separator} />
 
-        <Button title="Neues Rezept laden" onPress={fetchRandomRecipe} />
+          <Button title="Neues Rezept laden" onPress={fetchRandomRecipe} />
 
-        {loading && <ActivityIndicator size="large" color="#0000ff" />}
+          {loading && <ActivityIndicator size="large" color="#0000ff" />}
 
-        {recipe && (
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
-              <View style={styles.recipeContainer}>
-                <Text style={styles.recipeTitle}>{recipe.strMeal}</Text>
-                <Image source={{ uri: recipe.strMealThumb }} style={styles.recipeImage} />
-                <View style={styles.ingredientContainer}>
-                  {renderIngredients()}
+          {recipe && (
+              <ScrollView contentContainerStyle={styles.scrollContainer}>
+                <View style={styles.recipeContainer}>
+                  <Text style={styles.recipeTitle}>{recipe.strMeal}</Text>
+                  <Image source={{ uri: recipe.strMealThumb }} style={styles.recipeImage} />
+                  <View style={styles.ingredientContainer}>
+                    {renderIngredients()}
+                  </View>
+                  <Text style={styles.recipeInstructions}>{recipe.strInstructions}</Text>
+                  <View style={styles.videoContainer}>
+                    <WebView
+                        style={styles.video}
+                        source={{ uri: recipe.strYoutube.replace("watch?v=", "embed/") }}
+                    />
+                  </View>
                 </View>
-                <Text style={styles.recipeInstructions}>{recipe.strInstructions}</Text>
-                <View style={styles.videoContainer}>
-                  <WebView
-                      style={styles.video}
-                      source={{ uri: recipe.strYoutube.replace("watch?v=", "embed/") }}
-                  />
-                </View>
-              </View>
-            </ScrollView>
-        )}
-      </View>
+              </ScrollView>
+          )}
+        </View>
+      </TouchableWithoutFeedback>
   );
 }
 
