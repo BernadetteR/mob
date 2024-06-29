@@ -6,7 +6,7 @@ import RecipeItem from '../../components/RecipeItem';
 import RecipeDetailScreen from '../../components/RecipeDetailScreen';
 import {globalStyles} from "@/styles/global";
 
-interface Meal {
+type Meal = {
   idMeal: string;
   strMeal: string;
   strMealThumb: string;
