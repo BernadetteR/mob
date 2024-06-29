@@ -179,11 +179,9 @@ export default function TabOneScreen() {
             <Header headlineText="Enter your ingredients" />
             <View style={styles.container}>
 
-              <Text style={styles.headerTitle}>Recipes</Text>
-              <View style={styles.separator} />
-              <Text style={styles.contentText}>Dies ist ein zusätzlicher Textinhalt.</Text>
-              <Button title="Klicken Sie mich" onPress={() => alert('Button wurde geklickt!')} />
               <Searchbar placeholder="Search" onChangeText={onChangeSearch} value={searchQuery} style={styles.searchbar} />
+
+              <Text style={globalStyles.globalHeadline}>Search by category</Text>
               <View style={styles.buttonContainer}>
                 {['Beef', 'Chicken', 'Dessert', 'Pasta', 'Pork', 'Seafood', 'Vegetarian', 'Vegan'].map((cat) => (
                     <Button key={cat} title={cat} onPress={() => fetchCategoryData(cat)} />
