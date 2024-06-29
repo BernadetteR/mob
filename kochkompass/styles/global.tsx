@@ -9,6 +9,13 @@ export const globalStyles = StyleSheet.create({
         textAlign: 'center',
         marginTop: 10,
         marginBottom: 10,
+    },
+    globalButton: {
+        backgroundColor: '#02A382',
+
+    },
+    globalScrollContainer: {
+        flexGrow: 1,
     }
 
 })

@@ -174,27 +174,30 @@ export default function TabOneScreen() {
   return (
 
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
           <View style={globalStyles.globalContainer}>
             <Header headlineText="Enter your ingredients" />
+            <Searchbar placeholder="Search" onChangeText={onChangeSearch} value={searchQuery} style={styles.searchbar} />
+
+            <ScrollView contentContainerStyle={globalStyles.globalScrollContainer}>
             <View style={styles.container}>
 
-              <Searchbar placeholder="Search" onChangeText={onChangeSearch} value={searchQuery} style={styles.searchbar} />
+                <Text style={globalStyles.globalHeadline}>Search by category</Text>
+                <View style={styles.buttonContainer}>
+                  {['Beef', 'Chicken', 'Dessert', 'Pasta', 'Pork', 'Seafood', 'Vegetarian', 'Vegan'].map((cat) => (
+                      <Button key={cat} title={cat} onPress={() => fetchCategoryData(cat)} />
+                  ))}
+                </View>
+                {filteredData.length > 0 ? (
+                    <FlatList data={filteredData} keyExtractor={(item) => item.idMeal} renderItem={renderItem} contentContainerStyle={styles.list} />
+                ) : (
+                    <Text style={styles.noRecipesText}>No recipes found.</Text>
+                )}
 
-              <Text style={globalStyles.globalHeadline}>Search by category</Text>
-              <View style={styles.buttonContainer}>
-                {['Beef', 'Chicken', 'Dessert', 'Pasta', 'Pork', 'Seafood', 'Vegetarian', 'Vegan'].map((cat) => (
-                    <Button key={cat} title={cat} onPress={() => fetchCategoryData(cat)} />
-                ))}
-              </View>
-              {filteredData.length > 0 ? (
-                  <FlatList data={filteredData} keyExtractor={(item) => item.idMeal} renderItem={renderItem} contentContainerStyle={styles.list} />
-              ) : (
-                  <Text style={styles.noRecipesText}>No recipes found.</Text>
-              )}
+
             </View>
+            </ScrollView>
         </View>
-        </ScrollView>
+
       </TouchableWithoutFeedback>
 
   );
@@ -216,9 +219,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
-    marginTop: 30,
   },
   searchbar: {
+    marginTop: 40,
     marginVertical: 20,
     width: '100%',
   },
