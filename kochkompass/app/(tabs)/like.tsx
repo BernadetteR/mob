@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Button, Text, View, ActivityIndicator, Image, ScrollView } from 'react-native';
 import Header from "@/components/Header";
 import {globalStyles} from "@/styles/global";
+import CustomButton from "@/components/CustomButton";
 
 export default function TabTwoScreen() {
     const [recipe, setRecipe] = useState(null);
@@ -26,7 +27,7 @@ export default function TabTwoScreen() {
             <View style={styles.container}>
                 <Text style={styles.title}>Zufälliges Rezept</Text>
                 <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-                <Button title="Neues Rezept laden" onPress={fetchRandomRecipe} />
+                <CustomButton title="Neues Rezept laden" onPress={fetchRandomRecipe} />
                 {loading && <ActivityIndicator size="large" color="#0000ff" />}
                 {recipe && (
                     <ScrollView contentContainerStyle={styles.scrollContainer}>

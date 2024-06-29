@@ -5,6 +5,7 @@ import Header from '../../components/Header';
 import RecipeItem from '../../components/RecipeItem';
 import RecipeDetailScreen from '../../components/RecipeDetailScreen';
 import {globalStyles} from "@/styles/global";
+import CustomButton from "@/components/CustomButton";
 
 type Meal = {
   idMeal: string;
@@ -184,7 +185,7 @@ export default function TabOneScreen() {
                 <Text style={globalStyles.globalHeadline}>Search by category</Text>
                 <View style={styles.buttonContainer}>
                   {['Beef', 'Chicken', 'Dessert', 'Pasta', 'Pork', 'Seafood', 'Vegetarian', 'Vegan'].map((cat) => (
-                      <Button key={cat} title={cat} onPress={() => fetchCategoryData(cat)} />
+                      <CustomButton key={cat} title={cat} onPress={() => fetchCategoryData(cat) } />
                   ))}
                 </View>
                 {filteredData.length > 0 ? (

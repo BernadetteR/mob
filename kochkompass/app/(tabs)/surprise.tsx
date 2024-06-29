@@ -5,6 +5,7 @@ import {
 import { WebView } from 'react-native-webview';
 import Header from "@/components/Header";
 import { globalStyles } from "@/styles/global";
+import CustomButton from "@/components/CustomButton";
 
 type Recipe = {
   strMeal: string;
@@ -55,10 +56,10 @@ export default function TabTwoScreen() {
         <Header headlineText="Surprise Me" />
         <View style={styles.container}>
 
-          <Button title="Neues Rezept laden" onPress={fetchRandomRecipe} />
+          <CustomButton title="Neues Rezept laden" onPress={fetchRandomRecipe} />
           {loading && <ActivityIndicator size="large" color="#0000ff" />}
           {recipe && (
-              <ScrollView contentContainerStyle={styles.scrollContainer}>
+              <ScrollView contentContainerStyle={globalStyles.globalScrollContainer}>
                 <View style={styles.recipeContainer}>
                   <Text style={styles.recipeTitle}>{recipe.strMeal}</Text>
                   <Image source={{ uri: recipe.strMealThumb }} style={styles.recipeImage} />
@@ -93,15 +94,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-    backgroundColor: '#eee',
-  },
-  scrollContainer: {
-    alignItems: 'center',
   },
   recipeContainer: {
     marginTop: 20,
