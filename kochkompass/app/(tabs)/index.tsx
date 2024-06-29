@@ -218,22 +218,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginTop: 30,
   },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-    backgroundColor: '#eee', // Replace lightColor and darkColor
-  },
-  contentText: {
-    fontSize: 16,
-    color: '#333',
-    textAlign: 'center',
-    marginVertical: 10,
-  },
   searchbar: {
     marginVertical: 20,
     width: '100%',
@@ -244,18 +228,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#f9f9f9',
     padding: 10,
     borderRadius: 5,
-  },
-  thumbnail: {
-    width: 100,
-    height: 100,
-    borderRadius: 5,
-    marginRight: 10,
-  },
-  title: {
-    fontSize: 18,
-    flex: 1,
-    flexWrap: 'wrap',
-    alignSelf: 'center',
   },
   errorContainer: {
     flex: 1,
