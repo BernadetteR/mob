@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList } from 'react-native';
+import { View, Text, FlatList, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {globalStyles} from "@/styles/global";
+import Header from "@/components/Header";
 
 type Props = {
     navigation: any; // Falls Navigation erforderlich ist
 };
 
-const LikeScreen: React.FC<Props> = ({ navigation }) => {
+const LikeScreen = ({ navigation }: Props) => {
     const [likedRecipes, setLikedRecipes] = useState<string[]>([]);
 
     useEffect(() => {
@@ -30,26 +32,46 @@ const LikeScreen: React.FC<Props> = ({ navigation }) => {
     };
 
     const renderItem = ({ item }: { item: string }) => (
-        <View style={{ padding: 10 }}>
+        <View style={styles.item}>
             <Text>{item}</Text>
             {/* Hier könntest du weitere Details oder eine Miniaturansicht des Rezepts anzeigen */}
         </View>
     );
 
     return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            {likedRecipes.length > 0 ? (
-                <FlatList
-                    data={likedRecipes}
-                    renderItem={renderItem}
-                    keyExtractor={(item) => item}
-                    style={{ width: '100%' }}
-                />
-            ) : (
-                <Text>No liked recipes yet.</Text>
-            )}
+        <View style={globalStyles.globalContainer}>
+            <Header headlineText="My Favorites" />
+            <View style={styles.container}>
+                {likedRecipes.length > 0 ? (
+                    <FlatList
+                        data={likedRecipes}
+                        renderItem={renderItem}
+                        keyExtractor={(item) => item}
+                        style={styles.flatList}
+                    />
+                ) : (
+                    <Text>No liked recipes yet.</Text>
+                )}
+            </View>
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 40,
+    },
+    flatList: {
+        width: '100%',
+    },
+    item: {
+        padding: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+    },
+});
 
 export default LikeScreen;
