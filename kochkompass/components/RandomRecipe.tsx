@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, View, ImageBackground, Text, TouchableOpacity, ScrollView, ActivityIndicator} from 'react-native';
 import {globalStyles} from "@/styles/global";
 import CustomButton from "@/components/CustomButton";
+import {WebView} from "react-native-webview";
 
 type RecipeProps = {
     recipe: {
