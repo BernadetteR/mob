@@ -43,9 +43,7 @@ export default function TabTwoScreen() {
           {loading && <ActivityIndicator size="large" color="#0000ff" />}
           {recipe && (
               <ScrollView contentContainerStyle={globalStyles.globalScrollContainer}>
-                <View style={styles.recipeContainer}>
-                  <RandomRecipe recipe={recipe} />
-                </View>
+                <RandomRecipe recipe={recipe} />
               </ScrollView>
           )}
         </View>
@@ -59,9 +57,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
-  },
-  recipeContainer: {
-    marginTop: 20,
-    alignItems: 'center',
   },
 });
