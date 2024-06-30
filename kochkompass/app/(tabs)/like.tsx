@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {globalStyles} from "@/styles/global";
+import { globalStyles } from "@/styles/global";
 import Header from "@/components/Header";
 
 type Props = {
     navigation: any; // Falls Navigation erforderlich ist
 };
 
-const LikeScreen = ({ navigation }: Props) => {
+export default function TabFourScreen({ navigation }: Props) {
     const [likedRecipes, setLikedRecipes] = useState<string[]>([]);
 
     useEffect(() => {
@@ -55,7 +55,7 @@ const LikeScreen = ({ navigation }: Props) => {
             </View>
         </View>
     );
-};
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -73,5 +73,3 @@ const styles = StyleSheet.create({
         borderBottomColor: '#ccc',
     },
 });
-
-export default LikeScreen;
