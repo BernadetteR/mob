@@ -256,8 +256,9 @@ const styles = StyleSheet.create({
   },
   searchbar: {
     marginTop: -30,
-    width: '100%',
     backgroundColor: '#ECECEC',
+    marginRight: 50,
+    marginLeft: 50,
   },
   errorContainer: {
     flex: 1,

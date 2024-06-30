@@ -21,9 +21,6 @@ export default function RecipeItem({ item, onPress, isLiked, onToggleLike }) {
     );
 }
 
-// Stil bleibt unverändert
-
-
 const styles = StyleSheet.create({
     touchable: {
         flex: 1,
@@ -32,7 +29,7 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
     },
     background: {
-        flex: 1,
+        width: 350,
         justifyContent: 'center',
         alignItems: 'center',
         overflow: 'hidden',
@@ -53,6 +50,6 @@ const styles = StyleSheet.create({
         textAlign: 'left',
     },
     icon: {
-        marginLeft: 10, // Abstand zwischen dem Text und dem Icon
+        marginLeft: 10,
     },
 });
