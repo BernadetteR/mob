@@ -3,7 +3,14 @@ import { StyleSheet, View, Text, Image, ImageBackground, TouchableOpacity, Scrol
 import { WebView } from 'react-native-webview';
 import { Ionicons } from '@expo/vector-icons';
 
-export default function RecipeDetailScreen({ recipe, onBackPress }) {
+type Props = {
+    recipe: Meal;
+    onBackPress: () => void;
+    isLiked: boolean;
+    onToggleLike: (recipeId: string) => void;
+};
+
+const RecipeDetailScreen: React.FC<Props> = ({ recipe, onBackPress, isLiked, onToggleLike }) => {
     const renderIngredients = () => {
         const ingredients = [];
         for (let i = 1; i <= 20; i++) {
@@ -20,6 +27,10 @@ export default function RecipeDetailScreen({ recipe, onBackPress }) {
         ));
     };
 
+    const toggleLike = () => {
+        onToggleLike(recipe.idMeal);
+    };
+
     return (
         <ImageBackground source={{ uri: recipe.strMealThumb }} style={styles.background}>
             <ScrollView contentContainerStyle={styles.container}>
@@ -29,7 +40,13 @@ export default function RecipeDetailScreen({ recipe, onBackPress }) {
                 <View style={styles.overlay}>
                     <View style={styles.headlineIcon}>
                         <Text style={styles.title}>{recipe.strMeal}</Text>
-                        <Ionicons name="heart-outline" size={30} color="black" style={styles.icon} />
+                        <Ionicons
+                            name={isLiked ? 'heart' : 'heart-outline'}
+                            size={30}
+                            color={isLiked ? 'red' : 'black'}
+                            style={styles.icon}
+                            onPress={toggleLike}
+                        />
                     </View>
                     <Text style={styles.category}>{recipe.strCategory}</Text>
                     <Image source={{ uri: recipe.strMealThumb }} style={styles.thumbnail} />
@@ -40,13 +57,13 @@ export default function RecipeDetailScreen({ recipe, onBackPress }) {
                     <Text style={styles.instructions}>{recipe.strInstructions}</Text>
                     <WebView
                         style={styles.video}
-                        source={{ uri: recipe.strYoutube.replace("watch?v=", "embed/") }}
+                        source={{ uri: recipe.strYoutube.replace('watch?v=', 'embed/') }}
                     />
                 </View>
             </ScrollView>
         </ImageBackground>
     );
-}
+};
 
 const styles = StyleSheet.create({
     background: {
@@ -129,3 +146,5 @@ const styles = StyleSheet.create({
         marginLeft: 10,
     },
 });
+
+export default RecipeDetailScreen;

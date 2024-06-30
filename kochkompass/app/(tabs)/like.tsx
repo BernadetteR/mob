@@ -1,79 +1,55 @@
-import React, { useState } from 'react';
-import { StyleSheet, Button, Text, View, ActivityIndicator, Image, ScrollView } from 'react-native';
-import Header from "@/components/Header";
-import {globalStyles} from "@/styles/global";
-import CustomButton from "@/components/CustomButton";
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function TabTwoScreen() {
-    const [recipe, setRecipe] = useState(null);
-    const [loading, setLoading] = useState(false);
+type Props = {
+    navigation: any; // Falls Navigation erforderlich ist
+};
 
-    const fetchRandomRecipe = async () => {
-        setLoading(true);
+const LikeScreen: React.FC<Props> = ({ navigation }) => {
+    const [likedRecipes, setLikedRecipes] = useState<string[]>([]);
+
+    useEffect(() => {
+        loadLikedRecipes();
+    }, []);
+
+    useEffect(() => {
+        // Hier kannst du die Anzeige aktualisieren, wenn likedRecipes sich ändert
+        // Du könntest hier weitere Logik hinzufügen, um auf Änderungen zu reagieren
+    }, [likedRecipes]);
+
+    const loadLikedRecipes = async () => {
         try {
-            const response = await fetch('https://www.themealdb.com/api/json/v1/1/random.php');
-            const data = await response.json();
-            setRecipe(data.meals[0]);
+            const storedLikedRecipes = await AsyncStorage.getItem('likedRecipes');
+            if (storedLikedRecipes) {
+                setLikedRecipes(JSON.parse(storedLikedRecipes));
+            }
         } catch (error) {
-            console.error('Fehler beim Abrufen des Rezepts:', error);
-        } finally {
-            setLoading(false);
+            console.error('Error loading liked recipes from AsyncStorage', error);
         }
     };
 
-    return (
-        <View style={[globalStyles.globalContainer, styles.mainContainer]}>
-            <Header headlineText="My Favorites" />
-            <View style={styles.container}>
-                <Text style={globalStyles.globalHeadline}>Have a look on your saved recipes!</Text>
-                <CustomButton title="Neues Rezept laden" onPress={fetchRandomRecipe} />
-                {loading && <ActivityIndicator size="large" color="#0000ff" />}
-                {recipe && (
-                    <ScrollView contentContainerStyle={globalStyles.globalScrollContainer}>
-                        <View style={styles.recipeContainer}>
-                            <Text style={styles.recipeTitle}>{recipe.strMeal}</Text>
-                            <Image source={{ uri: recipe.strMealThumb }} style={styles.recipeImage} />
-                            <Text style={styles.recipeInstructions}>{recipe.strInstructions}</Text>
-                        </View>
-                    </ScrollView>
-                )}
-            </View>
+    const renderItem = ({ item }: { item: string }) => (
+        <View style={{ padding: 10 }}>
+            <Text>{item}</Text>
+            {/* Hier könntest du weitere Details oder eine Miniaturansicht des Rezepts anzeigen */}
         </View>
     );
-}
 
-const styles = StyleSheet.create({
-    mainContainer: {
-        flex: 1,
-    },
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 20,
-    },
-    title: {
-        fontSize: 20,
-        fontWeight: 'bold',
-    },
-    recipeContainer: {
-        marginTop: 20,
-        alignItems: 'center',
-    },
-    recipeTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginBottom: 10,
-        textAlign: 'center',
-    },
-    recipeImage: {
-        width: 300,
-        height: 300,
-        marginBottom: 10,
-    },
-    recipeInstructions: {
-        fontSize: 16,
-        textAlign: 'center',
-        paddingHorizontal: 10,
-    },
-});
+    return (
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            {likedRecipes.length > 0 ? (
+                <FlatList
+                    data={likedRecipes}
+                    renderItem={renderItem}
+                    keyExtractor={(item) => item}
+                    style={{ width: '100%' }}
+                />
+            ) : (
+                <Text>No liked recipes yet.</Text>
+            )}
+        </View>
+    );
+};
+
+export default LikeScreen;

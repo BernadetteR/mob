@@ -6,27 +6,30 @@ import RecipeItem from '../../components/RecipeItem';
 import RecipeDetailScreen from '../../components/RecipeDetailScreen';
 import {globalStyles} from "@/styles/global";
 import CustomButton from "@/components/CustomButton";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-type Meal = {
+
+export type Meal = {
   idMeal: string;
   strMeal: string;
   strMealThumb: string;
   ingredients: string[];
   strInstructions?: string;
   strYoutube?: string;
-  [key: string]: any;
-}
+};
 
-export default function TabOneScreen() {
+export default function App() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [data, setData] = useState<Meal[]>([]);
-  const [filteredData, setFilteredData] = useState<Meal[]>([]); // Initialize with empty array
+  const [filteredData, setFilteredData] = useState<Meal[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
-  const [selectedRecipe, setSelectedRecipe] = useState<Meal | null>(null); // Zustand für ausgewähltes Rezept
+  const [selectedRecipe, setSelectedRecipe] = useState<Meal | null>(null);
+  const [likedRecipes, setLikedRecipes] = useState<string[]>([]);
 
   useEffect(() => {
     fetchRecipesFromAtoZ();
+    loadLikedRecipes();
   }, []);
 
   const fetchRecipesFromAtoZ = () => {
@@ -75,7 +78,7 @@ export default function TabOneScreen() {
       if (ingredient) {
         ingredients.push(ingredient.toLowerCase());
       } else {
-        break; // Stop if no more ingredients are found
+        break;
       }
     }
     return ingredients;
@@ -123,7 +126,7 @@ export default function TabOneScreen() {
   const handlePress = (item: Meal) => {
     setLoading(true);
     const selectedId = item.idMeal;
-    const firstLetter = item.strMeal.charAt(0).toLowerCase(); // Anfangsbuchstabe des Rezeptnamens
+    const firstLetter = item.strMeal.charAt(0).toLowerCase();
 
     fetch(`https://www.themealdb.com/api/json/v1/1/search.php?f=${firstLetter}`)
         .then((response) => response.json())
@@ -147,11 +150,36 @@ export default function TabOneScreen() {
   };
 
   const handleBackPress = () => {
-    setSelectedRecipe(null); // Zurück zur Listenansicht
+    setSelectedRecipe(null);
+  };
+
+  const toggleLike = (recipeId: string) => {
+    if (likedRecipes.includes(recipeId)) {
+      setLikedRecipes(likedRecipes.filter(id => id !== recipeId));
+    } else {
+      setLikedRecipes([...likedRecipes, recipeId]);
+    }
+    AsyncStorage.setItem('likedRecipes', JSON.stringify(likedRecipes));
+  };
+
+  const loadLikedRecipes = async () => {
+    try {
+      const storedLikedRecipes = await AsyncStorage.getItem('likedRecipes');
+      if (storedLikedRecipes) {
+        setLikedRecipes(JSON.parse(storedLikedRecipes));
+      }
+    } catch (error) {
+      console.error('Error loading liked recipes from AsyncStorage', error);
+    }
   };
 
   const renderItem = ({ item }: { item: Meal }) => (
-      <RecipeItem item={item} onPress={handlePress} />
+      <RecipeItem
+          item={item}
+          onPress={handlePress}
+          isLiked={likedRecipes.includes(item.idMeal)}
+          onToggleLike={toggleLike}
+      />
   );
 
   if (loading) {
@@ -168,34 +196,39 @@ export default function TabOneScreen() {
 
   if (selectedRecipe) {
     return (
-        <RecipeDetailScreen recipe={selectedRecipe} onBackPress={handleBackPress} />
+        <RecipeDetailScreen
+            recipe={selectedRecipe}
+            onBackPress={handleBackPress}
+            isLiked={likedRecipes.includes(selectedRecipe.idMeal)}
+            onToggleLike={toggleLike}
+        />
     );
   }
 
   return (
 
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={globalStyles.globalContainer}>
-            <Header headlineText="Enter your ingredients" />
-            <Searchbar placeholder="search by ingredient" onChangeText={onChangeSearch} value={searchQuery} style={styles.searchbar} />
+        <View style={globalStyles.globalContainer}>
+          <Header headlineText="Enter your ingredients" />
+          <Searchbar placeholder="search by ingredient" onChangeText={onChangeSearch} value={searchQuery} style={styles.searchbar} />
 
-            <ScrollView contentContainerStyle={globalStyles.globalScrollContainer}>
+          <ScrollView contentContainerStyle={globalStyles.globalScrollContainer}>
             <View style={styles.container}>
 
-                <Text style={globalStyles.globalHeadline}>Search by category</Text>
-                <View style={styles.buttonContainer}>
-                  {['Beef', 'Chicken', 'Dessert', 'Pasta', 'Pork', 'Seafood', 'Vegetarian', 'Vegan'].map((cat) => (
-                      <CustomButton key={cat} title={cat} onPress={() => fetchCategoryData(cat) } />
-                  ))}
-                </View>
-                {filteredData.length > 0 ? (
-                    <FlatList data={filteredData} keyExtractor={(item) => item.idMeal} renderItem={renderItem} contentContainerStyle={styles.list} />
-                ) : (
-                    <Text style={styles.noRecipesText}>No recipes found.</Text>
-                )}
+              <Text style={globalStyles.globalHeadline}>Search by category</Text>
+              <View style={styles.buttonContainer}>
+                {['Beef', 'Chicken', 'Dessert', 'Pasta', 'Pork', 'Seafood', 'Vegetarian', 'Vegan'].map((cat) => (
+                    <CustomButton key={cat} title={cat} onPress={() => fetchCategoryData(cat) } />
+                ))}
+              </View>
+              {filteredData.length > 0 ? (
+                  <FlatList data={filteredData} keyExtractor={(item) => item.idMeal} renderItem={renderItem} contentContainerStyle={styles.list} />
+              ) : (
+                  <Text style={styles.noRecipesText}>No recipes found.</Text>
+              )}
 
             </View>
-            </ScrollView>
+          </ScrollView>
         </View>
       </TouchableWithoutFeedback>
 
@@ -203,22 +236,27 @@ export default function TabOneScreen() {
 }
 
 const styles = StyleSheet.create({
-  scrollContainer: {
-    flexGrow: 1,
-  },
-  list: {
-    padding: 10,
-  },
   container: {
     flex: 1,
+    backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     paddingHorizontal: 20,
+    paddingTop: 50,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    marginVertical: 10,
+  },
+  list: {
+    paddingVertical: 10,
+    flexGrow: 1,
   },
   searchbar: {
     marginTop: -30,
-    marginRight: 50,
-    marginLeft: 50,
+    width: '100%',
     backgroundColor: '#ECECEC',
   },
   errorContainer: {
@@ -229,12 +267,6 @@ const styles = StyleSheet.create({
   errorText: {
     color: 'red',
     fontSize: 18,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
-    marginVertical: 10,
   },
   noRecipesText: {
     fontSize: 18,

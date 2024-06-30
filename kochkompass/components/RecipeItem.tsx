@@ -2,18 +2,27 @@ import React from 'react';
 import { StyleSheet, View, ImageBackground, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-export default function RecipeItem({ item, onPress }) {
+export default function RecipeItem({ item, onPress, isLiked, onToggleLike }) {
+    const toggleLike = () => {
+        onToggleLike(item.idMeal);
+    };
+
     return (
         <TouchableOpacity onPress={() => onPress(item)} style={styles.touchable}>
             <ImageBackground source={{ uri: item.strMealThumb }} style={styles.background}>
                 <View style={styles.overlay}>
                     <Text style={styles.title}>{item.strMeal}</Text>
-                    <Ionicons name="heart-outline" size={20} color="white" style={styles.icon} />
+                    <TouchableOpacity onPress={toggleLike}>
+                        <Ionicons name={isLiked ? 'heart' : 'heart-outline'} size={20} color="white" style={styles.icon} />
+                    </TouchableOpacity>
                 </View>
             </ImageBackground>
         </TouchableOpacity>
     );
 }
+
+// Stil bleibt unverändert
+
 
 const styles = StyleSheet.create({
     touchable: {
