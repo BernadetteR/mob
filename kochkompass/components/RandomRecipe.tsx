@@ -14,7 +14,7 @@ type RandomRecipeProps = {
     recipe: Recipe;
 };
 
-const RandomRecipeView: React.FC<RandomRecipeProps> = ({ recipe }) => {
+export default function RandomRecipe({ recipe }: RandomRecipeProps) {
     const renderIngredients = () => {
         const ingredients = [];
         for (let i = 1; i <= 20; i++) {
@@ -47,7 +47,7 @@ const RandomRecipeView: React.FC<RandomRecipeProps> = ({ recipe }) => {
             </View>
         </View>
     );
-};
+}
 
 const styles = StyleSheet.create({
     recipeContainer: {
@@ -91,5 +91,3 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
     },
 });
-
-export default RandomRecipeView;
