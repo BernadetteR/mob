@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     },
     videoContainer: {
         width: '100%',
-        aspectRatio: 16 / 9, // Adjust aspect ratio as needed
+        aspectRatio: 16 / 9,
         marginTop: 20,
         marginBottom: 20,
         borderRadius: 8,
