@@ -1,25 +1,21 @@
 import React from 'react';
-import {StyleSheet, View, ImageBackground, Text, TouchableOpacity, ScrollView, ActivityIndicator} from 'react-native';
-import {globalStyles} from "@/styles/global";
-import CustomButton from "@/components/CustomButton";
-import {WebView} from "react-native-webview";
+import { View, Text, Image, StyleSheet } from 'react-native';
+import { WebView } from 'react-native-webview';
 
-type RecipeProps = {
-    recipe: {
-        strMeal: string;
-        strMealThumb: string;
-        strInstructions: string;
-        strYoutube: string;
-        [key: string]: string;
-    } | null;
-    onNewRecipe: () => void;
-    loading: boolean;
+type Recipe = {
+    strMeal: string;
+    strMealThumb: string;
+    strInstructions: string;
+    strYoutube: string;
+    [key: string]: string;
 };
 
-export default function RandomRecipe({ recipe, onNewRecipe, loading }: RecipeProps) {
-    const renderIngredients = () => {
-        if (!recipe) return null;
+type RandomRecipeProps = {
+    recipe: Recipe;
+};
 
+const RandomRecipeView: React.FC<RandomRecipeProps> = ({ recipe }) => {
+    const renderIngredients = () => {
         const ingredients = [];
         for (let i = 1; i <= 20; i++) {
             const ingredient = recipe[`strIngredient${i}`];
@@ -28,7 +24,6 @@ export default function RandomRecipe({ recipe, onNewRecipe, loading }: RecipePro
                 ingredients.push(`${ingredient} - ${measure}`);
             }
         }
-
         return ingredients.map((ingredient, index) => (
             <Text key={index} style={styles.ingredient}>
                 • {ingredient}
@@ -36,41 +31,28 @@ export default function RandomRecipe({ recipe, onNewRecipe, loading }: RecipePro
         ));
     };
 
-    if (loading) {
-        return <ActivityIndicator size="large" color="#0000ff" />;
-    }
-
-    if (!recipe) {
-        return (
-            <View style={styles.container}>
-                <Text>No recipe available.</Text>
-                <CustomButton title="Load New Recipe" onPress={onNewRecipe} />
-            </View>
-        );
-    }
-
     return (
-        <ScrollView contentContainerStyle={globalStyles.globalScrollContainer}>
+        <View style={styles.recipeContainer}>
             <Text style={styles.recipeTitle}>{recipe.strMeal}</Text>
             <Image source={{ uri: recipe.strMealThumb }} style={styles.recipeImage} />
-            <View style={styles.ingredientsContainer}>
+            <View style={styles.ingredientContainer}>
                 {renderIngredients()}
             </View>
             <Text style={styles.recipeInstructions}>{recipe.strInstructions}</Text>
             <View style={styles.videoContainer}>
-                <WebView style={styles.video} source={{ uri: recipe.strYoutube.replace('watch?v=', 'embed/') }} />
+                <WebView
+                    style={styles.video}
+                    source={{ uri: recipe.strYoutube.replace("watch?v=", "embed/") }}
+                />
             </View>
-            <CustomButton title="Load New Recipe" onPress={onNewRecipe} />
-        </ScrollView>
+        </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
+    recipeContainer: {
+        marginTop: 20,
         alignItems: 'center',
-        justifyContent: 'center',
-        padding: 20,
     },
     recipeTitle: {
         fontSize: 18,
@@ -83,15 +65,6 @@ const styles = StyleSheet.create({
         height: 300,
         marginBottom: 10,
     },
-    ingredientsContainer: {
-        marginTop: 20,
-        alignItems: 'flex-start',
-    },
-    ingredient: {
-        fontSize: 16,
-        textAlign: 'left',
-        paddingHorizontal: 10,
-    },
     recipeInstructions: {
         fontSize: 16,
         textAlign: 'center',
@@ -99,7 +72,7 @@ const styles = StyleSheet.create({
     },
     videoContainer: {
         width: '100%',
-        aspectRatio: 16 / 9,
+        aspectRatio: 16 / 9, // Adjust aspect ratio as needed
         marginTop: 20,
         marginBottom: 20,
         borderRadius: 8,
@@ -108,4 +81,15 @@ const styles = StyleSheet.create({
     video: {
         flex: 1,
     },
+    ingredientContainer: {
+        marginTop: 20,
+        alignItems: 'flex-start',
+    },
+    ingredient: {
+        fontSize: 16,
+        textAlign: 'left',
+        paddingHorizontal: 10,
+    },
 });
+
+export default RandomRecipeView;

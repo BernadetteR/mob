@@ -6,6 +6,7 @@ import { WebView } from 'react-native-webview';
 import Header from "@/components/Header";
 import { globalStyles } from "@/styles/global";
 import CustomButton from "@/components/CustomButton";
+import RandomRecipe from "@/components/RandomRecipe";
 
 type Recipe = {
   strMeal: string;
@@ -32,27 +33,8 @@ export default function TabTwoScreen() {
     }
   };
 
-  const renderIngredients = () => {
-    if (!recipe) return null;
-
-    const ingredients = [];
-    for (let i = 1; i <= 20; i++) {
-      const ingredient = recipe[`strIngredient${i}`];
-      const measure = recipe[`strMeasure${i}`];
-      if (ingredient) {
-        ingredients.push(`${ingredient} - ${measure}`);
-      }
-    }
-
-    return ingredients.map((ingredient, index) => (
-        <Text key={index} style={styles.ingredient}>
-          • {ingredient}
-        </Text>
-    ));
-  };
-
   return (
-      <View style={[globalStyles.globalContainer, styles.mainContainer]}>
+      <View style={globalStyles.globalContainer}>
         <Header headlineText="Surprise Me" />
         <View style={styles.container}>
           <Text style={globalStyles.globalHeadline}>Don't know what to cook?{'\n'}Get a random recipe!</Text>
@@ -62,18 +44,7 @@ export default function TabTwoScreen() {
           {recipe && (
               <ScrollView contentContainerStyle={globalStyles.globalScrollContainer}>
                 <View style={styles.recipeContainer}>
-                  <Text style={styles.recipeTitle}>{recipe.strMeal}</Text>
-                  <Image source={{ uri: recipe.strMealThumb }} style={styles.recipeImage} />
-                  <View style={styles.ingredientContainer}>
-                    {renderIngredients()}
-                  </View>
-                  <Text style={styles.recipeInstructions}>{recipe.strInstructions}</Text>
-                  <View style={styles.videoContainer}>
-                    <WebView
-                        style={styles.video}
-                        source={{ uri: recipe.strYoutube.replace("watch?v=", "embed/") }}
-                    />
-                  </View>
+                  <RandomRecipe recipe={recipe} />
                 </View>
               </ScrollView>
           )}
@@ -83,57 +54,14 @@ export default function TabTwoScreen() {
 }
 
 const styles = StyleSheet.create({
-  mainContainer: {
-    flex: 1,
-  },
   container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
   recipeContainer: {
     marginTop: 20,
     alignItems: 'center',
-  },
-  recipeTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    textAlign: 'center',
-  },
-  recipeImage: {
-    width: 300,
-    height: 300,
-    marginBottom: 10,
-  },
-  recipeInstructions: {
-    fontSize: 16,
-    textAlign: 'center',
-    paddingHorizontal: 10,
-  },
-  videoContainer: {
-    width: '100%',
-    aspectRatio: 16 / 9, // Adjust aspect ratio as needed
-    marginTop: 20,
-    marginBottom: 20,
-    borderRadius: 8,
-    overflow: 'hidden',
-  },
-  video: {
-    flex: 1,
-  },
-  ingredientContainer: {
-    marginTop: 20,
-    alignItems: 'flex-start',
-  },
-  ingredient: {
-    fontSize: 16,
-    textAlign: 'left',
-    paddingHorizontal: 10,
   },
 });
