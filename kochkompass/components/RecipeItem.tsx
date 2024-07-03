@@ -11,7 +11,7 @@ export default function RecipeItem({ item, onPress, isLiked, onToggleLike }) {
         <TouchableOpacity onPress={() => onPress(item)} style={styles.touchable}>
             <ImageBackground source={{ uri: item.strMealThumb }} style={styles.background}>
                 <View style={styles.overlay}>
-                    <Text style={styles.title}>{item.strMeal}</Text>
+                    <Text numberOfLines={2} style={styles.title}>{item.strMeal}</Text>
                     <TouchableOpacity onPress={toggleLike}>
                         <Ionicons name={isLiked ? 'heart' : 'heart-outline'} size={20} color="white" style={styles.icon} />
                     </TouchableOpacity>
@@ -40,11 +40,13 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.3)',
         padding: 5,
         paddingLeft: 10,
+        paddingRight: 10,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
     },
     title: {
+        flex: 1,
         fontSize: 15,
         fontWeight: 'bold',
         color: 'white',
