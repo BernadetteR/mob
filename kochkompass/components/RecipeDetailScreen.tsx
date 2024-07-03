@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text, Image, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { Ionicons } from '@expo/vector-icons';
-import {Meal} from "@/app/(tabs)";
+import { Meal } from '@/app/(tabs)';
 
 type Props = {
     recipe: Meal;
@@ -11,7 +11,7 @@ type Props = {
     onToggleLike: (recipeId: string) => void;
 };
 
-export default function RecipeDetailScreen ({ recipe, onBackPress, isLiked, onToggleLike }) {
+export default function RecipeDetailScreen({ recipe, onBackPress, isLiked, onToggleLike }: Props) {
     const renderIngredients = () => {
         const ingredients = [];
         for (let i = 1; i <= 20; i++) {
@@ -40,7 +40,9 @@ export default function RecipeDetailScreen ({ recipe, onBackPress, isLiked, onTo
                 </TouchableOpacity>
                 <View style={styles.overlay}>
                     <View style={styles.headlineIcon}>
-                        <Text style={styles.title}>{recipe.strMeal}</Text>
+                        <Text numberOfLines={4} style={styles.title}>
+                            {recipe.strMeal}
+                        </Text>
                         <Ionicons
                             name={isLiked ? 'heart' : 'heart-outline'}
                             size={30}
@@ -64,7 +66,7 @@ export default function RecipeDetailScreen ({ recipe, onBackPress, isLiked, onTo
             </ScrollView>
         </ImageBackground>
     );
-};
+}
 
 const styles = StyleSheet.create({
     background: {
@@ -89,6 +91,8 @@ const styles = StyleSheet.create({
         color: 'black',
         marginBottom: 10,
         textAlign: 'center',
+        flexWrap: 'wrap',   // Text umbricht, wenn nicht genug Platz vorhanden ist
+        flexShrink: 1,      // Text wird skaliert, um in den verfügbaren Platz zu passen
     },
     category: {
         fontSize: 18,
