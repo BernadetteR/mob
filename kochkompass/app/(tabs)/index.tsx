@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, ImageBackground, Button, View, FlatList, Text, TouchableWithoutFeedback, Keyboard, ActivityIndicator, ScrollView } from 'react-native';
+import { StyleSheet, View, FlatList, Text, TouchableWithoutFeedback, Keyboard, ActivityIndicator, ScrollView } from 'react-native';
 import { Searchbar } from 'react-native-paper';
 import Header from '../../components/Header';
 import RecipeItem from '../../components/RecipeItem';
@@ -210,7 +210,9 @@ export default function App() {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={globalStyles.globalContainer}>
           <Header headlineText="Enter your ingredients" />
-          <Searchbar placeholder="search by ingredient" onChangeText={onChangeSearch} value={searchQuery} style={styles.searchbar} />
+          <View style={styles.searchContainer}>
+            <Searchbar placeholder="search by ingredient" onChangeText={onChangeSearch} value={searchQuery} style={styles.searchbar} />
+          </View>
 
           <ScrollView contentContainerStyle={globalStyles.globalScrollContainer}>
             <View style={styles.container}>
@@ -254,11 +256,26 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     flexGrow: 1,
   },
-  searchbar: {
+  searchContainer: {
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+    height: 50,
+    width: 320,
+    borderColor: 'black',
     marginTop: -30,
-    backgroundColor: '#ECECEC',
-    marginRight: 50,
-    marginLeft: 50,
+    zIndex: 1,
+    elevation: 5,
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    alignSelf: 'center',
+  },
+  searchbar: {
+    backgroundColor: 'transparent',
+    width: '100%',
   },
   errorContainer: {
     flex: 1,
