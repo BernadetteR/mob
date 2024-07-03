@@ -28,8 +28,9 @@ export default function TabLayout() {
                 },
                 headerTintColor: '#fff', // Ensures the text color in the header is white
                 headerTitleStyle: {
-                    fontWeight: 'bold',
+                    fontWeight: 'regular',
                 },
+                headerShadowVisible: false, // Entfernt den Schatten oder Divider unter dem Header
                 // Disable the static render of the header on web
                 // to prevent a hydration error in React Navigation v6.
                 headerShown: useClientOnlyValue(false, true),
@@ -63,7 +64,7 @@ export default function TabLayout() {
                 }}
             />
             <Tabs.Screen
-                name="karte"
+                name="shops"
                 options={{
                     title: 'Shops',
                     tabBarIcon: ({ color }) => <TabBarIcon name="map-marker-alt" color={color} />,
