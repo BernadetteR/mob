@@ -36,9 +36,10 @@ const styles = StyleSheet.create({
         height: 55,
     },
     overlay: {
+        ...StyleSheet.absoluteFillObject,
         backgroundColor: 'rgba(0, 0, 0, 0.3)',
-        padding: 15,
-        width: '100%',
+        padding: 5,
+        paddingLeft: 10,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
