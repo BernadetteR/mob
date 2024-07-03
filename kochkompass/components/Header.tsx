@@ -30,11 +30,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,
-        paddingVertical: 20, // Verringert die Höhe des Headers
-        paddingTop: Platform.OS === 'ios' ? 40 : 20, // Fügt oben mehr Platz für iOS hinzu
+        paddingVertical: 20,
+        paddingTop: Platform.OS === 'ios' ? 40 : 20,
     },
     logo: {
-        width: 300, // Verkleinert das Logo
+        width: 300,
         height: 180,
         resizeMode: 'contain',
         marginRight: 20,

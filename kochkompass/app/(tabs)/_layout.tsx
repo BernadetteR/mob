@@ -17,11 +17,19 @@ function TabBarIcon(props: {
 
 export default function TabLayout() {
     const colorScheme = useColorScheme();
+    const customColor = '#02A382';
 
     return (
         <Tabs
             screenOptions={{
-                tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+                tabBarActiveTintColor: customColor,
+                headerStyle: {
+                    backgroundColor: customColor,
+                },
+                headerTintColor: '#fff', // Ensures the text color in the header is white
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                },
                 // Disable the static render of the header on web
                 // to prevent a hydration error in React Navigation v6.
                 headerShown: useClientOnlyValue(false, true),
