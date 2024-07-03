@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text, Image, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { Ionicons } from '@expo/vector-icons';
+import {Meal} from "@/app/(tabs)";
 
 type Props = {
     recipe: Meal;
@@ -10,7 +11,7 @@ type Props = {
     onToggleLike: (recipeId: string) => void;
 };
 
-const RecipeDetailScreen: React.FC<Props> = ({ recipe, onBackPress, isLiked, onToggleLike }) => {
+export default function RecipeDetailScreen ({ recipe, onBackPress, isLiked, onToggleLike }) {
     const renderIngredients = () => {
         const ingredients = [];
         for (let i = 1; i <= 20; i++) {
@@ -146,5 +147,3 @@ const styles = StyleSheet.create({
         marginLeft: 10,
     },
 });
-
-export default RecipeDetailScreen;
