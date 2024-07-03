@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Image, View, Text, StatusBar, SafeAreaView } from 'react-native';
+import { StyleSheet, Image, View, Text, StatusBar, Platform } from 'react-native';
 
 // Logo importieren
 import logo from '../img/logo.png';
@@ -8,9 +8,15 @@ import logo from '../img/logo.png';
 export default function Header(props) {
     return (
         <View style={styles.header}>
-            <StatusBar backgroundColor="#02A382" barStyle="light-content" />
+            <StatusBar
+                backgroundColor="#02A382"
+                barStyle="light-content"
+                translucent={Platform.OS === 'android'}
+            />
             <Image source={logo} style={styles.logo} />
-            <Text style={styles.container}>{props.headlineText}</Text>
+            <View style={styles.textContainer}>
+                <Text style={styles.headline}>{props.headlineText}</Text>
+            </View>
         </View>
     );
 }
@@ -25,6 +31,7 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,
         paddingVertical: 20, // Verringert die Höhe des Headers
+        paddingTop: Platform.OS === 'ios' ? 40 : 20, // Fügt oben mehr Platz für iOS hinzu
     },
     logo: {
         width: 300, // Verkleinert das Logo
@@ -33,17 +40,13 @@ const styles = StyleSheet.create({
         marginRight: 20,
         marginTop: -40,
     },
-    headline: {
-        color: 'white',
-        fontSize: 24,
-    },
-    container: {
+    textContainer: {
         backgroundColor: 'white',
         justifyContent: 'center',
-        width: 270,
         alignItems: 'center',
         borderRadius: 20,
         padding: 10,
+        width: 300,
         borderColor: 'black',
         position: 'absolute',
         bottom: -20,
@@ -53,8 +56,11 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.3,
         shadowRadius: 2,
+    },
+    headline: {
         fontWeight: 'bold',
         fontSize: 20,
         textAlign: 'center',
     }
 });
+
