@@ -7,7 +7,7 @@ import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
 
-// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
+// Funktion für das Tab-Bar Icon
 function TabBarIcon(props: {
     name: React.ComponentProps<typeof FontAwesome5>['name'];
     color: string;
@@ -19,6 +19,9 @@ export default function TabLayout() {
     const colorScheme = useColorScheme();
     const customColor = '#02A382';
 
+    // Farbe für das Icon (immer weiß)
+    const iconColor = '#fff';
+
     return (
         <Tabs
             screenOptions={{
@@ -26,13 +29,11 @@ export default function TabLayout() {
                 headerStyle: {
                     backgroundColor: customColor,
                 },
-                headerTintColor: '#fff', // Ensures the text color in the header is white
+                headerTintColor: '#fff', // Textfarbe im Header immer weiß
                 headerTitleStyle: {
                     fontWeight: 'regular',
                 },
-                headerShadowVisible: false, // Entfernt den Schatten oder Divider unter dem Header
-                // Disable the static render of the header on web
-                // to prevent a hydration error in React Navigation v6.
+                headerShadowVisible: false,
                 headerShown: useClientOnlyValue(false, true),
             }}>
             <Tabs.Screen
@@ -47,7 +48,7 @@ export default function TabLayout() {
                                     <FontAwesome5
                                         name="info-circle"
                                         size={25}
-                                        color={Colors[colorScheme ?? 'light'].text}
+                                        color={iconColor} // Immer weiß
                                         style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
                                     />
                                 )}
