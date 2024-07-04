@@ -42,7 +42,7 @@ export default function TabLayout() {
                     title: 'Recipe',
                     tabBarIcon: ({ color }) => <TabBarIcon name="utensils" color={color} />,
                     headerRight: () => (
-                        <Link href="/modal" asChild>
+                        <Link href="/About" asChild>
                             <Pressable>
                                 {({ pressed }) => (
                                     <FontAwesome5

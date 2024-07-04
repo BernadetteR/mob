@@ -25,6 +25,7 @@ export default function App() {
   const [error, setError] = useState<Error | null>(null);
   const [selectedRecipe, setSelectedRecipe] = useState<Meal | null>(null);
   const [likedRecipes, setLikedRecipes] = useState<Meal[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   useEffect(() => {
     //clearAsyncStorage();
@@ -32,7 +33,6 @@ export default function App() {
     loadLikedRecipes();
   }, []);
 
-  // gespeicherte Rezepte aus dem Storage löschen
   const clearAsyncStorage = async () => {
     try {
       await AsyncStorage.removeItem('likedRecipes');
@@ -112,6 +112,7 @@ export default function App() {
 
   const fetchCategoryData = (category: string) => {
     setLoading(true);
+    setSelectedCategory(category);
     fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`)
         .then((response) => response.json())
         .then((json) => {
@@ -164,6 +165,8 @@ export default function App() {
   };
 
   const toggleLike = async (recipe: Meal | null) => {
+    if (recipe === null) return;
+
     let updatedLikedRecipes;
     if (likedRecipes.some(likedRecipe => likedRecipe.idMeal === recipe.idMeal)) {
       updatedLikedRecipes = likedRecipes.filter(likedRecipe => likedRecipe.idMeal !== recipe.idMeal);
@@ -177,6 +180,7 @@ export default function App() {
       console.error('Error saving liked recipes to AsyncStorage', error);
     }
   };
+
 
   const loadLikedRecipes = async () => {
     try {
@@ -221,7 +225,6 @@ export default function App() {
     );
   }
 
-
   return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={globalStyles.globalContainer}>
@@ -232,11 +235,15 @@ export default function App() {
 
           <ScrollView contentContainerStyle={globalStyles.globalScrollContainer}>
             <View style={styles.container}>
-
               <Text style={globalStyles.globalHeadline}>Search by category</Text>
               <View style={styles.buttonContainer}>
                 {['Beef', 'Chicken', 'Dessert', 'Pasta', 'Pork', 'Seafood', 'Vegetarian', 'Vegan'].map((cat) => (
-                    <CustomButton key={cat} title={cat} onPress={() => fetchCategoryData(cat)} />
+                    <CustomButton
+                        key={cat}
+                        title={cat}
+                        onPress={() => fetchCategoryData(cat)}
+                        isSelected={selectedCategory === cat}
+                    />
                 ))}
               </View>
               {filteredData.length > 0 ? (
@@ -244,7 +251,6 @@ export default function App() {
               ) : (
                   <Text style={styles.noRecipesText}>No recipes found.</Text>
               )}
-
             </View>
           </ScrollView>
         </View>
