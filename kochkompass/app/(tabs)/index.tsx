@@ -4,10 +4,9 @@ import { Searchbar } from 'react-native-paper';
 import Header from '../../components/Header';
 import RecipeItem from '../../components/RecipeItem';
 import RecipeDetailScreen from '../../components/RecipeDetailScreen';
-import {globalStyles} from "@/styles/global";
+import { globalStyles } from "@/styles/global";
 import CustomButton from "@/components/CustomButton";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 
 export type Meal = {
   idMeal: string;
@@ -25,7 +24,7 @@ export default function App() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
   const [selectedRecipe, setSelectedRecipe] = useState<Meal | null>(null);
-  const [likedRecipes, setLikedRecipes] = useState<string[]>([]);
+  const [likedRecipes, setLikedRecipes] = useState<Meal[]>([]);
 
   useEffect(() => {
     fetchRecipesFromAtoZ();
@@ -153,13 +152,19 @@ export default function App() {
     setSelectedRecipe(null);
   };
 
-  const toggleLike = (recipeId: string) => {
-    if (likedRecipes.includes(recipeId)) {
-      setLikedRecipes(likedRecipes.filter(id => id !== recipeId));
+  const toggleLike = async (recipe: Meal) => {
+    let updatedLikedRecipes;
+    if (likedRecipes.some(likedRecipe => likedRecipe.idMeal === recipe.idMeal)) {
+      updatedLikedRecipes = likedRecipes.filter(likedRecipe => likedRecipe.idMeal !== recipe.idMeal);
     } else {
-      setLikedRecipes([...likedRecipes, recipeId]);
+      updatedLikedRecipes = [...likedRecipes, recipe];
     }
-    AsyncStorage.setItem('likedRecipes', JSON.stringify(likedRecipes));
+    setLikedRecipes(updatedLikedRecipes);
+    try {
+      await AsyncStorage.setItem('likedRecipes', JSON.stringify(updatedLikedRecipes));
+    } catch (error) {
+      console.error('Error saving liked recipes to AsyncStorage', error);
+    }
   };
 
   const loadLikedRecipes = async () => {
@@ -177,8 +182,8 @@ export default function App() {
       <RecipeItem
           item={item}
           onPress={handlePress}
-          isLiked={likedRecipes.includes(item.idMeal)}
-          onToggleLike={toggleLike}
+          isLiked={likedRecipes.some(likedRecipe => likedRecipe.idMeal === item.idMeal)}
+          onToggleLike={() => toggleLike(item)}
       />
   );
 
@@ -199,14 +204,13 @@ export default function App() {
         <RecipeDetailScreen
             recipe={selectedRecipe}
             onBackPress={handleBackPress}
-            isLiked={likedRecipes.includes(selectedRecipe.idMeal)}
-            onToggleLike={toggleLike}
+            isLiked={likedRecipes.some(likedRecipe => likedRecipe.idMeal === selectedRecipe?.idMeal)}
+            onToggleLike={() => toggleLike(selectedRecipe)}
         />
     );
   }
 
   return (
-
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={globalStyles.globalContainer}>
           <Header headlineText="Enter your ingredients" />
@@ -220,7 +224,7 @@ export default function App() {
               <Text style={globalStyles.globalHeadline}>Search by category</Text>
               <View style={styles.buttonContainer}>
                 {['Beef', 'Chicken', 'Dessert', 'Pasta', 'Pork', 'Seafood', 'Vegetarian', 'Vegan'].map((cat) => (
-                    <CustomButton key={cat} title={cat} onPress={() => fetchCategoryData(cat) } />
+                    <CustomButton key={cat} title={cat} onPress={() => fetchCategoryData(cat)} />
                 ))}
               </View>
               {filteredData.length > 0 ? (
@@ -233,7 +237,6 @@ export default function App() {
           </ScrollView>
         </View>
       </TouchableWithoutFeedback>
-
   );
 }
 
