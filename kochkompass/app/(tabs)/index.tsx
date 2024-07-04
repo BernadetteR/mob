@@ -27,9 +27,20 @@ export default function App() {
   const [likedRecipes, setLikedRecipes] = useState<Meal[]>([]);
 
   useEffect(() => {
+    //clearAsyncStorage();
     fetchRecipesFromAtoZ();
     loadLikedRecipes();
   }, []);
+
+  // gespeicherte Rezepte aus dem Storage löschen
+  const clearAsyncStorage = async () => {
+    try {
+      await AsyncStorage.removeItem('likedRecipes');
+      setLikedRecipes([]);
+    } catch (error) {
+      console.error('Error clearing AsyncStorage', error);
+    }
+  };
 
   const fetchRecipesFromAtoZ = () => {
     setLoading(true);
@@ -152,7 +163,7 @@ export default function App() {
     setSelectedRecipe(null);
   };
 
-  const toggleLike = async (recipe: Meal) => {
+  const toggleLike = async (recipe: Meal | null) => {
     let updatedLikedRecipes;
     if (likedRecipes.some(likedRecipe => likedRecipe.idMeal === recipe.idMeal)) {
       updatedLikedRecipes = likedRecipes.filter(likedRecipe => likedRecipe.idMeal !== recipe.idMeal);
@@ -209,6 +220,7 @@ export default function App() {
         />
     );
   }
+
 
   return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
