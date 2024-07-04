@@ -1,24 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { globalStyles } from "@/styles/global";
 import Header from "@/components/Header";
+import RecipeItem from '@/components/RecipeItem'; // Importiere RecipeItem
+import { useNavigation } from '@react-navigation/native';
 
-type Props = {
-    navigation: any; // Falls Navigation erforderlich ist
+type Meal = {
+    idMeal: string;
+    strMeal: string;
+    strMealThumb: string;
+    ingredients: string[];
+    strInstructions?: string;
+    strYoutube?: string;
 };
 
-export default function TabFourScreen({ navigation }: Props) {
-    const [likedRecipes, setLikedRecipes] = useState<string[]>([]);
+export default function LikedRecipesScreen() {
+    const [likedRecipes, setLikedRecipes] = useState<Meal[]>([]);
+    const navigation = useNavigation();
 
     useEffect(() => {
         loadLikedRecipes();
     }, []);
-
-    useEffect(() => {
-        // Hier kannst du die Anzeige aktualisieren, wenn likedRecipes sich ändert
-        // Du könntest hier weitere Logik hinzufügen, um auf Änderungen zu reagieren
-    }, [likedRecipes]);
 
     const loadLikedRecipes = async () => {
         try {
@@ -31,11 +34,23 @@ export default function TabFourScreen({ navigation }: Props) {
         }
     };
 
-    const renderItem = ({ item }: { item: string }) => (
-        <View style={styles.item}>
-            <Text>{item}</Text>
-            {/* Hier könntest du weitere Details oder eine Miniaturansicht des Rezepts anzeigen */}
-        </View>
+    const handlePressRecipe = (recipe: Meal) => {
+        navigation.navigate('RecipeDetail', { recipe }); // Navigiere zu RecipeDetailScreen
+    };
+
+    const toggleLike = async (recipeId: string) => {
+        const updatedLikedRecipes = likedRecipes.filter(recipe => recipe.idMeal !== recipeId);
+        setLikedRecipes(updatedLikedRecipes);
+        await AsyncStorage.setItem('likedRecipes', JSON.stringify(updatedLikedRecipes));
+    };
+
+    const renderItem = ({ item }: { item: Meal }) => (
+        <RecipeItem
+            item={item}
+            onPress={handlePressRecipe}
+            isLiked={true}
+            onToggleLike={toggleLike}
+        />
     );
 
     return (
@@ -46,7 +61,7 @@ export default function TabFourScreen({ navigation }: Props) {
                     <FlatList
                         data={likedRecipes}
                         renderItem={renderItem}
-                        keyExtractor={(item) => item}
+                        keyExtractor={(item) => item.idMeal}
                         style={styles.flatList}
                     />
                 ) : (
@@ -65,11 +80,7 @@ const styles = StyleSheet.create({
         marginTop: 40,
     },
     flatList: {
-        width: '100%',
-    },
-    item: {
-        padding: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
+
+
     },
 });
