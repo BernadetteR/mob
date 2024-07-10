@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, ActivityIndicator } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import * as Location from 'expo-location';
-import axios from 'axios';
+import * as Location from 'expo-location'; //to import location for gps
+import axios from 'axios'; //import axios for api requests
 import Header from "@/components/Header";
 import {globalStyles} from "@/styles/global";
 
+// Defining the type for the location object
 type LocationObject = {
     coords: {
         latitude: number;
         longitude: number;
     };
 };
-
+//Defining the type for the store
 type Store = {
     id: number;
     lat: number;
@@ -24,43 +25,42 @@ type Store = {
 };
 
 export default function TabThreeScreen() {
-    const [location, setLocation] = useState<LocationObject | null>(null);
-    const [errorMsg, setErrorMsg] = useState<string | null>(null);
-    const [stores, setStores] = useState<Store[]>([]);
-    const [selectedStore, setSelectedStore] = useState<Store | null>(null);
+    const [location, setLocation] = useState<LocationObject | null>(null); //state for current location
+    const [errorMsg, setErrorMsg] = useState<string | null>(null); //state for error massage
+    const [stores, setStores] = useState<Store[]>([]); //state for list of stores
+    const [selectedStore, setSelectedStore] = useState<Store | null>(null); //state for selected store
 
     useEffect(() => {
         (async () => {
+            //Requesting permission for location access
             let { status } = await Location.requestForegroundPermissionsAsync();
             if (status !== 'granted') {
                 setErrorMsg('Permission to access location was denied');
                 return;
             }
-
+            // to get the current location
             let location = await Location.getCurrentPositionAsync({});
             setLocation(location);
-
-            // Load nearby stores (supermarkets, grocery stores, convenience stores)
+            // Load nearby stores (supermarkets, grocery stores, convenience stores) based on location
             loadNearbyStores(location.coords.latitude, location.coords.longitude);
         })();
     }, []);
-
+    // Function to load nearby stores
     const loadNearbyStores = async (latitude: number, longitude: number) => {
         try {
             const response = await axios.get(
                 `https://overpass-api.de/api/interpreter?data=[out:json];(node["shop"="supermarket"](around:10000,${latitude},${longitude});node["shop"="grocery"](around:2000,${latitude},${longitude});node["shop"="convenience"](around:2000,${latitude},${longitude}););out body;`
             );
-
             setStores(response.data.elements);
         } catch (error) {
             console.error('Error fetching nearby stores:', error);
         }
     };
-
+    // function when a marker(pin) is clicked
     const handleMarkerPress = (store: Store) => {
         setSelectedStore(store);
     };
-
+    // opening hours of the selected store
     const renderOpeningHours = () => {
         if (selectedStore && selectedStore.tags.opening_hours) {
             return (
@@ -77,7 +77,7 @@ export default function TabThreeScreen() {
             );
         }
     };
-
+    // error message
     if (errorMsg) {
         return (
             <View style={styles.errorContainer}>
@@ -86,7 +86,7 @@ export default function TabThreeScreen() {
             </View>
         );
     }
-
+    //if location is not set
     if (!location) {
         return (
             <View style={styles.loadingContainer}>
@@ -94,7 +94,7 @@ export default function TabThreeScreen() {
             </View>
         );
     }
-
+    // render function
     return (
         <View style={[globalStyles.globalContainer, styles.container]}>
             <Header headlineText="Closest Shops" />
@@ -137,7 +137,7 @@ export default function TabThreeScreen() {
         </View>
     );
 }
-
+// styles
 const styles = StyleSheet.create({
     container: {
         flex: 1,
