@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
 type CustomButtonProps = {
     title: string;
@@ -26,11 +26,12 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         marginVertical: 5,
         borderWidth: 1,
-        borderColor: '#02A382', // Initial border color when not selected
+        borderColor: '#02A382',
+        alignSelf: 'center',
     },
     selectedButton: {
-        backgroundColor: 'white', // Selected background color
-        borderColor: '#02A382', // Selected border color
+        backgroundColor: 'white',
+        borderColor: '#02A382',
     },
     buttonText: {
         color: 'white',
@@ -39,6 +40,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     selectedText: {
-        color: '#02A382', // Selected text color
+        color: '#02A382',
     },
 });
