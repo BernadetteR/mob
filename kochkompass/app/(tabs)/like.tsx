@@ -37,7 +37,6 @@ export default function LikedRecipesScreen() {
     const handlePressRecipe = (recipe: Meal) => {
         navigation.navigate('RecipeDetail', { recipe }); // Navigiere zu RecipeDetailScreen
     };
-
     const toggleLike = async (recipeId: string) => {
         const updatedLikedRecipes = likedRecipes.filter(recipe => recipe.idMeal !== recipeId);
         setLikedRecipes(updatedLikedRecipes);
