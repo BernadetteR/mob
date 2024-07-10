@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { globalStyles } from "@/styles/global";
 import Header from "@/components/Header";
@@ -36,8 +36,9 @@ export default function LikedRecipesScreen() {
 
     const handlePressRecipe = (recipe: Meal) => {
         // Detailansicht
-        //navigation.navigate('RecipeDetail', { recipe }); // Navigiere zu RecipeDetailScreen
+        // navigation.navigate('RecipeDetail', { recipe }); // Navigiere zu RecipeDetailScreen
     };
+
     const toggleLike = async (recipeId: string) => {
         const updatedLikedRecipes = likedRecipes.filter(recipe => recipe.idMeal !== recipeId);
         setLikedRecipes(updatedLikedRecipes);
@@ -62,7 +63,7 @@ export default function LikedRecipesScreen() {
                         data={likedRecipes}
                         renderItem={renderItem}
                         keyExtractor={(item) => item.idMeal}
-                        style={styles.flatList}
+                        contentContainerStyle={styles.flatList} // Hier contentContainerStyle verwenden
                     />
                 ) : (
                     <Text>No liked recipes yet.</Text>
@@ -70,18 +71,19 @@ export default function LikedRecipesScreen() {
             </View>
         </View>
     );
-
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
         marginTop: 40,
+        backgroundColor: '#fff',
+        paddingHorizontal: 20,
+        paddingTop: 10,
     },
     flatList: {
-
-
+        width: 380,
+        paddingHorizontal: 16,
     },
 });
