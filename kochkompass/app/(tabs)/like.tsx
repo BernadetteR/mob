@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
         paddingTop: 10,
     },
     flatList: {
-        width: 380,
+        width: 350,
         paddingHorizontal: 16,
     },
 });
