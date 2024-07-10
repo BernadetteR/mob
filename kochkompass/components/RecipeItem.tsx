@@ -1,15 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, ImageBackground, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
-type Meal = {
-    idMeal: string;
-    strMeal: string;
-    strMealThumb: string;
-    ingredients: string[];
-    strInstructions?: string;
-    strYoutube?: string;
-};
+import { Meal } from '@/app/(tabs)';
 
 type RecipeItemProps = {
     item: Meal;

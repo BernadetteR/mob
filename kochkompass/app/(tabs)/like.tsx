@@ -5,15 +5,7 @@ import { globalStyles } from "@/styles/global";
 import Header from "@/components/Header";
 import RecipeItem from '@/components/RecipeItem';
 import { useNavigation } from '@react-navigation/native';
-
-type Meal = {
-    idMeal: string;
-    strMeal: string;
-    strMealThumb: string;
-    ingredients: string[];
-    strInstructions?: string;
-    strYoutube?: string;
-};
+import { Meal } from '@/app/(tabs)';
 
 export default function LikedRecipesScreen() {
     const [likedRecipes, setLikedRecipes] = useState<Meal[]>([]);
