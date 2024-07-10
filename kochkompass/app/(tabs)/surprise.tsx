@@ -36,8 +36,8 @@ export default function TabTwoScreen() {
   return (
       <View style={globalStyles.globalContainer}>
         <Header headlineText="Surprise Me" />
-        <ScrollView contentContainerStyle={globalStyles.globalScrollContainer}>
         <View style={styles.container}>
+          <ScrollView contentContainerStyle={globalStyles.globalScrollContainer}>
           <Text style={globalStyles.globalHeadline}>Don't know what to cook?{'\n'}Get a random recipe!</Text>
 
           <CustomButton title="Get new recipe!" onPress={fetchRandomRecipe} />
@@ -47,8 +47,9 @@ export default function TabTwoScreen() {
                 <RandomRecipe recipe={recipe} />
 
           )}
+          </ScrollView>
         </View>
-        </ScrollView>
+
       </View>
   );
 }
