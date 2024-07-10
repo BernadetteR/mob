@@ -3,7 +3,7 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { globalStyles } from "@/styles/global";
 import Header from "@/components/Header";
-import RecipeItem from '@/components/RecipeItem'; // Importiere RecipeItem
+import RecipeItem from '@/components/RecipeItem';
 import { useNavigation } from '@react-navigation/native';
 
 type Meal = {
@@ -35,7 +35,8 @@ export default function LikedRecipesScreen() {
     };
 
     const handlePressRecipe = (recipe: Meal) => {
-        navigation.navigate('RecipeDetail', { recipe }); // Navigiere zu RecipeDetailScreen
+        // Detailansicht
+        //navigation.navigate('RecipeDetail', { recipe }); // Navigiere zu RecipeDetailScreen
     };
 
     const toggleLike = async (recipeId: string) => {
@@ -48,10 +49,12 @@ export default function LikedRecipesScreen() {
         <RecipeItem
             item={item}
             onPress={handlePressRecipe}
-            isLiked={true}
+            isLiked={likedRecipes.some(recipe => recipe.idMeal === item.idMeal)}
             onToggleLike={toggleLike}
         />
     );
+
+
 
     return (
         <View style={globalStyles.globalContainer}>
@@ -70,6 +73,7 @@ export default function LikedRecipesScreen() {
             </View>
         </View>
     );
+
 }
 
 const styles = StyleSheet.create({
