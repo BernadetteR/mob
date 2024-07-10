@@ -29,7 +29,6 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
     },
     background: {
-        width: 300,
         justifyContent: 'center',
         alignItems: 'center',
         overflow: 'hidden',
