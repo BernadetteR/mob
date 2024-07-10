@@ -15,7 +15,10 @@ export type Meal = {
   ingredients: string[];
   strInstructions?: string;
   strYoutube?: string;
+  strCategory?: string;  // Include strCategory as optional
+  [key: string]: string | string[] | undefined;  // Allow dynamic indexing
 };
+
 
 export default function App() {
   const [searchQuery, setSearchQuery] = useState<string>('');

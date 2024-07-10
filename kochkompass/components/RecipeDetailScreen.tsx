@@ -2,16 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text, Image, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { Ionicons } from '@expo/vector-icons';
-
-type Meal = {
-    idMeal: string;
-    strMeal: string;
-    strMealThumb: string;
-    strCategory?: string;
-    strInstructions?: string;
-    strYoutube?: string;
-    [key: string]: string | undefined;
-};
+import { Meal } from '@/app/(tabs)';
 
 type Props = {
     recipe: Meal;
@@ -24,8 +15,8 @@ export default function RecipeDetailScreen({ recipe, onBackPress, isLiked, onTog
     const renderIngredients = () => {
         const ingredients = [];
         for (let i = 1; i <= 20; i++) {
-            const ingredient = recipe[`strIngredient${i}`];
-            const measure = recipe[`strMeasure${i}`];
+            const ingredient = recipe[`strIngredient${i}` as keyof Meal] as string;
+            const measure = recipe[`strMeasure${i}` as keyof Meal] as string;
             if (ingredient) {
                 ingredients.push(`${ingredient} - ${measure}`);
             }
