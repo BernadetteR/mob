@@ -2,7 +2,18 @@ import React from 'react';
 import { StyleSheet, View, ImageBackground, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-export default function RecipeItem({ item, onPress, isLiked, onToggleLike }) {
+type RecipeItemProps = {
+    item: {
+        idMeal: string;
+        strMeal: string;
+        strMealThumb: string;
+    };
+    onPress: (item: { idMeal: string; strMeal: string; strMealThumb: string }) => void;
+    isLiked: boolean;
+    onToggleLike: (idMeal: string) => void;
+};
+
+export default function RecipeItem({ item, onPress, isLiked, onToggleLike }: RecipeItemProps) {
     const toggleLike = () => {
         onToggleLike(item.idMeal);
     };
