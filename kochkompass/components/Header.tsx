@@ -1,11 +1,15 @@
 import React from 'react';
 import { StyleSheet, Image, View, Text, StatusBar, Platform } from 'react-native';
 
-// Logo importieren
+// Importing logo as a module
 import logo from '../img/logo.png';
 
-// Headline wird mitgegeben
-export default function Header(props) {
+// Define Props type
+type HeaderProps = {
+    headlineText: string;
+};
+
+export default function Header(props: HeaderProps) {
     return (
         <View style={styles.header}>
             <StatusBar
@@ -21,7 +25,7 @@ export default function Header(props) {
     );
 }
 
-// Die Styles für die Header-Komponente
+// The Styles for the Header Component
 const styles = StyleSheet.create({
     header: {
         width: '100%',
@@ -63,4 +67,3 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     }
 });
-

@@ -2,7 +2,16 @@ import React from 'react';
 import { StyleSheet, View, Text, Image, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { Ionicons } from '@expo/vector-icons';
-import { Meal } from '@/app/(tabs)';
+
+type Meal = {
+    idMeal: string;
+    strMeal: string;
+    strMealThumb: string;
+    strCategory?: string;
+    strInstructions?: string;
+    strYoutube?: string;
+    [key: string]: string | undefined;
+};
 
 type Props = {
     recipe: Meal;
@@ -51,17 +60,21 @@ export default function RecipeDetailScreen({ recipe, onBackPress, isLiked, onTog
                             onPress={toggleLike}
                         />
                     </View>
-                    <Text style={styles.category}>{recipe.strCategory}</Text>
+                    {recipe.strCategory && (
+                        <Text style={styles.category}>{recipe.strCategory}</Text>
+                    )}
                     <Image source={{ uri: recipe.strMealThumb }} style={styles.thumbnail} />
                     <View style={styles.ingredientsContainer}>
                         <Text style={styles.sectionTitle}>Ingredients:</Text>
                         {renderIngredients()}
                     </View>
                     <Text style={styles.instructions}>{recipe.strInstructions}</Text>
-                    <WebView
-                        style={styles.video}
-                        source={{ uri: recipe.strYoutube.replace('watch?v=', 'embed/') }}
-                    />
+                    {recipe.strYoutube && (
+                        <WebView
+                            style={styles.video}
+                            source={{ uri: recipe.strYoutube.replace('watch?v=', 'embed/') }}
+                        />
+                    )}
                 </View>
             </ScrollView>
         </ImageBackground>
@@ -91,8 +104,8 @@ const styles = StyleSheet.create({
         color: 'black',
         marginBottom: 10,
         textAlign: 'center',
-        flexWrap: 'wrap',   // Text umbricht, wenn nicht genug Platz vorhanden ist
-        flexShrink: 1,      // Text wird skaliert, um in den verfügbaren Platz zu passen
+        flexWrap: 'wrap',
+        flexShrink: 1,
     },
     category: {
         fontSize: 18,
