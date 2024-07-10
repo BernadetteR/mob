@@ -8,13 +8,15 @@ import { useNavigation } from '@react-navigation/native';
 import { Meal } from '@/app/(tabs)';
 
 export default function LikedRecipesScreen() {
-    const [likedRecipes, setLikedRecipes] = useState<Meal[]>([]);
-    const navigation = useNavigation();
+    const [likedRecipes, setLikedRecipes] = useState<Meal[]>([]);   // stores the array of liked recipes
+    const navigation = useNavigation(); // update the likedRecipes state
 
+    // only once at the beginning
     useEffect(() => {
         loadLikedRecipes();
     }, []);
 
+    // load liked recipes from AsyncStorage
     const loadLikedRecipes = async () => {
         try {
             const storedLikedRecipes = await AsyncStorage.getItem('likedRecipes');
@@ -26,16 +28,20 @@ export default function LikedRecipesScreen() {
         }
     };
 
+    // show Detailscrenn
     const handlePressRecipe = (recipe: Meal) => {
         // Detailansicht
+        // not implemented
     };
 
+    // toggle like status of a recipe
     const toggleLike = async (recipeId: string) => {
         const updatedLikedRecipes = likedRecipes.filter(recipe => recipe.idMeal !== recipeId);
         setLikedRecipes(updatedLikedRecipes);
         await AsyncStorage.setItem('likedRecipes', JSON.stringify(updatedLikedRecipes));
     };
 
+    // get liked recipes
     const renderItem = ({ item }: { item: Meal }) => (
         <RecipeItem
             item={item}
