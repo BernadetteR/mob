@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
     },
     background: {
-        width: 350,
+        width: 300,
         justifyContent: 'center',
         alignItems: 'center',
         overflow: 'hidden',

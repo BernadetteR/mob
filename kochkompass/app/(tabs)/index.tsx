@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, FlatList, Text, TouchableWithoutFeedback, Keyboard, ActivityIndicator, ScrollView } from 'react-native';
+import { StyleSheet, View, FlatList, Text, TouchableWithoutFeedback, Keyboard, ActivityIndicator } from 'react-native';
 import { Searchbar } from 'react-native-paper';
 import Header from '../../components/Header';
 import RecipeItem from '../../components/RecipeItem';
@@ -181,7 +181,6 @@ export default function App() {
     }
   };
 
-
   const loadLikedRecipes = async () => {
     try {
       const storedLikedRecipes = await AsyncStorage.getItem('likedRecipes');
@@ -232,27 +231,29 @@ export default function App() {
           <View style={styles.searchContainer}>
             <Searchbar placeholder="search by ingredient" onChangeText={onChangeSearch} value={searchQuery} style={styles.searchbar} />
           </View>
-
-          <ScrollView contentContainerStyle={globalStyles.globalScrollContainer}>
-            <View style={styles.container}>
-              <Text style={globalStyles.globalHeadline}>Search by category</Text>
-              <View style={styles.buttonContainer}>
-                {['Beef', 'Chicken', 'Dessert', 'Pasta', 'Pork', 'Seafood', 'Vegetarian', 'Vegan'].map((cat) => (
-                    <CustomButton
-                        key={cat}
-                        title={cat}
-                        onPress={() => fetchCategoryData(cat)}
-                        isSelected={selectedCategory === cat}
-                    />
-                ))}
-              </View>
-              {filteredData.length > 0 ? (
-                  <FlatList data={filteredData} keyExtractor={(item) => item.idMeal} renderItem={renderItem} contentContainerStyle={styles.list} />
-              ) : (
-                  <Text style={styles.noRecipesText}>No recipes found.</Text>
+          <View style={styles.container}>
+          <FlatList
+              data={filteredData}
+              keyExtractor={(item) => item.idMeal}
+              renderItem={renderItem}
+              ListHeaderComponent={() => (
+                  <View>
+                    <Text style={globalStyles.globalHeadline}>Search by category</Text>
+                    <View style={styles.buttonContainer}>
+                      {['Beef', 'Chicken', 'Dessert', 'Pasta', 'Pork', 'Seafood', 'Vegetarian', 'Vegan'].map((cat) => (
+                          <CustomButton
+                              key={cat}
+                              title={cat}
+                              onPress={() => fetchCategoryData(cat)}
+                              isSelected={selectedCategory === cat}
+                          />
+                      ))}
+                    </View>
+                  </View>
               )}
-            </View>
-          </ScrollView>
+              contentContainerStyle={styles.list}
+          />
+          </View>
         </View>
       </TouchableWithoutFeedback>
   );
@@ -271,11 +272,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
-    marginVertical: 10,
+    marginVertical: 10
   },
   list: {
     paddingVertical: 10,
     flexGrow: 1,
+    width: 300,
   },
   searchContainer: {
     backgroundColor: 'white',
