@@ -264,9 +264,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'flex-start',
     paddingHorizontal: 20,
-    paddingTop: 50,
+    paddingTop: 10,
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -277,7 +276,7 @@ const styles = StyleSheet.create({
   list: {
     paddingVertical: 10,
     flexGrow: 1,
-    width: 300,
+    //width: 300
   },
   searchContainer: {
     backgroundColor: 'white',
