@@ -36,7 +36,6 @@ export default function LikedRecipesScreen() {
 
     const handlePressRecipe = (recipe: Meal) => {
         // Detailansicht
-        // navigation.navigate('RecipeDetail', { recipe }); // Navigiere zu RecipeDetailScreen
     };
 
     const toggleLike = async (recipeId: string) => {
