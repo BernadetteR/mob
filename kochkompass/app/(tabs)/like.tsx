@@ -54,8 +54,6 @@ export default function LikedRecipesScreen() {
         />
     );
 
-
-
     return (
         <View style={globalStyles.globalContainer}>
             <Header headlineText="My Favorites" />
