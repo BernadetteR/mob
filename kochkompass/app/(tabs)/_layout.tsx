@@ -29,7 +29,7 @@ export default function TabLayout() {
                 headerStyle: {
                     backgroundColor: customColor,
                 },
-                headerTintColor: '#fff', // Textfarbe im Header immer weiß
+                headerTintColor: customColor,
                 headerTitleStyle: {
                     fontWeight: 'regular',
                 },
