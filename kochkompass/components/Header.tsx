@@ -31,14 +31,14 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,
         paddingVertical: 20,
-        paddingTop: Platform.OS === 'ios' ? 40 : 20,
+        paddingTop: Platform.OS === 'ios' ? 40 : 20,    // Design for iOS
     },
     logo: {
         width: 300,
         height: 180,
         resizeMode: 'contain',
         marginRight: 20,
-        marginTop: -40,
+        marginTop: -55,
     },
     textContainer: {
         backgroundColor: 'white',
