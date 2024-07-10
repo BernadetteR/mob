@@ -95,7 +95,11 @@ const styles = StyleSheet.create({
     },
     break: {
 <<<<<<< HEAD
+<<<<<<< HEAD
         height: 20, // Hier kannst du die gewünschte Höhe des Abstands anpassen
+=======
+        height: 20,
+>>>>>>> 41d8f36b3cb8336eb718ed033240dd5859d170fd
 =======
         height: 20,
 >>>>>>> 41d8f36b3cb8336eb718ed033240dd5859d170fd
