@@ -17,19 +17,20 @@ type Recipe = {
 };
 
 export default function TabTwoScreen() {
-  const [recipe, setRecipe] = useState<Recipe | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [recipe, setRecipe] = useState<Recipe | null>(null);  // stores the current recipe that is fetched
+  const [loading, setLoading] = useState(false);  // tracks whether the app is currently fetching data from the API
 
+  // get random recipe from API
   const fetchRandomRecipe = async () => {
-    setLoading(true);
+    setLoading(true); // loading started --> state to true
     try {
       const response = await fetch('https://www.themealdb.com/api/json/v1/1/random.php');
       const data = await response.json();
-      setRecipe(data.meals[0]);
+      setRecipe(data.meals[0]); // set the recipe state to the first meal in the response
     } catch (error) {
       console.error('Fehler beim Abrufen des Rezepts:', error);
     } finally {
-      setLoading(false);
+      setLoading(false);  // loading finished --> state to false
     }
   };
 

@@ -47,6 +47,7 @@ export default function App() {
     }
   };
 
+  // get all recipes
   const fetchRecipesFromAtoZ = () => {
     setLoading(true); // Loading state set to true to indicate that data is loading
     const letters = 'abcdefghijklmnopqrstuvwxyz'; // List of all letters from a to z
