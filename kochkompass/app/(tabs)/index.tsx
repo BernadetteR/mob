@@ -15,27 +15,29 @@ export type Meal = {
   ingredients: string[];
   strInstructions?: string;
   strYoutube?: string;
-  strCategory?: string;  // Include strCategory as optional
-  [key: string]: string | string[] | undefined;  // Allow dynamic indexing
+  strCategory?: string;
+  [key: string]: string | string[] | undefined;
 };
 
 
 export default function App() {
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [data, setData] = useState<Meal[]>([]);
-  const [filteredData, setFilteredData] = useState<Meal[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<Error | null>(null);
-  const [selectedRecipe, setSelectedRecipe] = useState<Meal | null>(null);
-  const [likedRecipes, setLikedRecipes] = useState<Meal[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>(''); // current value of the search query entered by the user in the Searchbar
+  const [data, setData] = useState<Meal[]>([]); // holds an array of Meal objects fetched from the API
+  const [filteredData, setFilteredData] = useState<Meal[]>([]); // array of Meal objects that match the search
+  const [loading, setLoading] = useState<boolean>(true);  // indicates whether data is currently being fetched
+  const [error, setError] = useState<Error | null>(null); // any error that might occur during data fetching or processing
+  const [selectedRecipe, setSelectedRecipe] = useState<Meal | null>(null);  // etails of a single recipe (Meal object) that the user selects to view in detail
+  const [likedRecipes, setLikedRecipes] = useState<Meal[]>([]); // holds an array of Meal objects that the user has liked
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);  // the category name selected by the user
 
+  // only once at the beginning
   useEffect(() => {
     //clearAsyncStorage();
     fetchRecipesFromAtoZ();
     loadLikedRecipes();
   }, []);
 
+  // deletes saved recipes
   const clearAsyncStorage = async () => {
     try {
       await AsyncStorage.removeItem('likedRecipes');
@@ -46,8 +48,8 @@ export default function App() {
   };
 
   const fetchRecipesFromAtoZ = () => {
-    setLoading(true);
-    const letters = 'abcdefghijklmnopqrstuvwxyz';
+    setLoading(true); // Loading state set to true to indicate that data is loading
+    const letters = 'abcdefghijklmnopqrstuvwxyz'; // List of all letters from a to z
     const promises = letters.split('').map(letter =>
         fetch(`https://www.themealdb.com/api/json/v1/1/search.php?f=${letter}`)
             .then(response => response.json())
@@ -58,9 +60,11 @@ export default function App() {
             })
     );
 
+    // Wait for all fetch promises to complete
     Promise.all(promises)
         .then(results => {
           let allMeals: Meal[] = [];
+          // Iterate over the results and add the meals to the list of all meals
           results.forEach(meals => {
             if (meals) {
               const mappedMeals = meals.map((meal: any) => ({
@@ -74,8 +78,8 @@ export default function App() {
               allMeals = [...allMeals, ...mappedMeals];
             }
           });
-          setData(allMeals);
-          setLoading(false);
+          setData(allMeals);  // Set the state with all meals loaded
+          setLoading(false);  // false, when loading complete
         })
         .catch(error => {
           console.error('Error fetching recipes from A to Z', error);
@@ -84,6 +88,7 @@ export default function App() {
         });
   };
 
+  //  store all ingredients in an array
   const extractIngredients = (meal: any): string[] => {
     let ingredients: string[] = [];
     for (let i = 1; i <= 20; i++) {
@@ -97,8 +102,10 @@ export default function App() {
     return ingredients;
   };
 
+  // ingredient search
   const onChangeSearch = (query: string) => {
     setSearchQuery(query);
+    // entry
     if (query) {
       const queryLower = query.toLowerCase();
       setFilteredData(
@@ -108,14 +115,18 @@ export default function App() {
               )
           )
       );
-    } else {
+    }
+    // no entry
+    else {
       setFilteredData([]);
     }
   };
 
+  // get recipe by category
   const fetchCategoryData = (category: string) => {
     setLoading(true);
-    setSelectedCategory(category);
+    setSelectedCategory(category);  // set category state
+    // Fetch recipes based on the selected category from the API
     fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`)
         .then((response) => response.json())
         .then((json) => {
@@ -128,8 +139,8 @@ export default function App() {
             strYoutube: meal.strYoutube,
           }));
 
-          setFilteredData(categoryMeals);
-          setLoading(false);
+          setFilteredData(categoryMeals); // Update filtered data with category meals
+          setLoading(false); // Set loading state to false after data fetching
         })
         .catch((error) => {
           setError(error);
@@ -139,22 +150,24 @@ export default function App() {
 
   const handlePress = (item: Meal) => {
     setLoading(true);
-    const selectedId = item.idMeal;
+    const selectedId = item.idMeal; // get the meal ID
     const firstLetter = item.strMeal.charAt(0).toLowerCase();
 
+    // Fetch recipes starting with the first letter of the meal name from the API
     fetch(`https://www.themealdb.com/api/json/v1/1/search.php?f=${firstLetter}`)
         .then((response) => response.json())
         .then((secondJson) => {
+          // Extract the list of meals from the JSON response
           const secondMeals: Meal[] = secondJson.meals || [];
-
+          // Find a meal in the list that matches the selected meal ID
           const matchedRecipe = secondMeals.find((meal) => meal.idMeal === selectedId);
-
+          // meal found
           if (matchedRecipe) {
             setSelectedRecipe(matchedRecipe);
           } else {
             setSelectedRecipe(item);
           }
-
+          // fetch is complete --> false
           setLoading(false);
         })
         .catch((error) => {
@@ -163,27 +176,34 @@ export default function App() {
         });
   };
 
+  // deselect recipe
   const handleBackPress = () => {
     setSelectedRecipe(null);
   };
 
+  // like recipe
   const toggleLike = async (recipe: Meal | null) => {
-    if (recipe === null) return;
-
+    if (recipe === null) return;  // no recipe liked
+    // toggle liked status of the recipe in the liked recipes state
     let updatedLikedRecipes;
     if (likedRecipes.some(likedRecipe => likedRecipe.idMeal === recipe.idMeal)) {
       updatedLikedRecipes = likedRecipes.filter(likedRecipe => likedRecipe.idMeal !== recipe.idMeal);
-    } else {
+    }
+    else {
       updatedLikedRecipes = [...likedRecipes, recipe];
     }
+    // update liked recipes state
     setLikedRecipes(updatedLikedRecipes);
     try {
+      // save updated liked recipes to AsyncStorage
       await AsyncStorage.setItem('likedRecipes', JSON.stringify(updatedLikedRecipes));
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Error saving liked recipes to AsyncStorage', error);
     }
   };
 
+  // load liked recipes from AsyncStorage
   const loadLikedRecipes = async () => {
     try {
       const storedLikedRecipes = await AsyncStorage.getItem('likedRecipes');
@@ -195,6 +215,7 @@ export default function App() {
     }
   };
 
+  // RecipeItem
   const renderItem = ({ item }: { item: Meal }) => (
       <RecipeItem
           item={item}
@@ -204,10 +225,12 @@ export default function App() {
       />
   );
 
+  // show loading spinner
   if (loading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
   }
 
+  // error message in case of error
   if (error) {
     return (
         <View style={styles.errorContainer}>
@@ -216,6 +239,7 @@ export default function App() {
     );
   }
 
+  // show Detailscreen of selected recipe
   if (selectedRecipe) {
     return (
         <RecipeDetailScreen
