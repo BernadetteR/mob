@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { globalStyles } from "@/styles/global";
 import Header from "@/components/Header";
-import RecipeItem from '@/components/RecipeItem'; // Importiere RecipeItem
+import RecipeItem from '@/components/RecipeItem';
 import { useNavigation } from '@react-navigation/native';
 
 type Meal = {
@@ -35,7 +35,7 @@ export default function LikedRecipesScreen() {
     };
 
     const handlePressRecipe = (recipe: Meal) => {
-        navigation.navigate('RecipeDetail', { recipe }); // Navigiere zu RecipeDetailScreen
+        // Detailansicht
     };
 
     const toggleLike = async (recipeId: string) => {
@@ -48,7 +48,7 @@ export default function LikedRecipesScreen() {
         <RecipeItem
             item={item}
             onPress={handlePressRecipe}
-            isLiked={true}
+            isLiked={likedRecipes.some(recipe => recipe.idMeal === item.idMeal)}
             onToggleLike={toggleLike}
         />
     );
@@ -62,7 +62,7 @@ export default function LikedRecipesScreen() {
                         data={likedRecipes}
                         renderItem={renderItem}
                         keyExtractor={(item) => item.idMeal}
-                        style={styles.flatList}
+                        contentContainerStyle={styles.flatList} // Hier contentContainerStyle verwenden
                     />
                 ) : (
                     <Text>No liked recipes yet.</Text>
@@ -76,11 +76,13 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
         marginTop: 40,
+        backgroundColor: '#fff',
+        paddingHorizontal: 20,
+        paddingTop: 10,
     },
     flatList: {
-
-
+        width: 380,
+        paddingHorizontal: 16,
     },
 });

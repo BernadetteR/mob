@@ -35,9 +35,13 @@ export default function RandomRecipe({ recipe }: RandomRecipeProps) {
         <View style={styles.recipeContainer}>
             <Text style={styles.recipeTitle}>{recipe.strMeal}</Text>
             <Image source={{ uri: recipe.strMealThumb }} style={styles.recipeImage} />
+            <View style={styles.break}></View>
+            <Text style={styles.recipeTitle}>List of ingredients</Text>
             <View style={styles.ingredientContainer}>
                 {renderIngredients()}
             </View>
+            <View style={styles.break}></View>
+            <Text style={styles.recipeTitle}>Instruction</Text>
             <Text style={styles.recipeInstructions}>{recipe.strInstructions}</Text>
             <View style={styles.videoContainer}>
                 <WebView
@@ -67,7 +71,7 @@ const styles = StyleSheet.create({
     },
     recipeInstructions: {
         fontSize: 16,
-        textAlign: 'center',
+        textAlign: 'left',
         paddingHorizontal: 10,
     },
     videoContainer: {
@@ -82,12 +86,18 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     ingredientContainer: {
-        marginTop: 20,
         alignItems: 'flex-start',
     },
     ingredient: {
         fontSize: 16,
         textAlign: 'left',
         paddingHorizontal: 10,
+    },
+    break: {
+<<<<<<< HEAD
+        height: 20, // Hier kannst du die gewünschte Höhe des Abstands anpassen
+=======
+        height: 20,
+>>>>>>> 41d8f36b3cb8336eb718ed033240dd5859d170fd
     },
 });

@@ -232,27 +232,27 @@ export default function App() {
             <Searchbar placeholder="search by ingredient" onChangeText={onChangeSearch} value={searchQuery} style={styles.searchbar} />
           </View>
           <View style={styles.container}>
-          <FlatList
-              data={filteredData}
-              keyExtractor={(item) => item.idMeal}
-              renderItem={renderItem}
-              ListHeaderComponent={() => (
-                  <View>
-                    <Text style={globalStyles.globalHeadline}>Search by category</Text>
-                    <View style={styles.buttonContainer}>
-                      {['Beef', 'Chicken', 'Dessert', 'Pasta', 'Pork', 'Seafood', 'Vegetarian', 'Vegan'].map((cat) => (
-                          <CustomButton
-                              key={cat}
-                              title={cat}
-                              onPress={() => fetchCategoryData(cat)}
-                              isSelected={selectedCategory === cat}
-                          />
-                      ))}
+            <FlatList
+                data={filteredData}
+                keyExtractor={(item) => item.idMeal}
+                renderItem={renderItem}
+                ListHeaderComponent={() => (
+                    <View>
+                      <Text style={globalStyles.globalHeadline}>Search by category</Text>
+                      <View style={styles.buttonContainer}>
+                        {['Beef', 'Chicken', 'Dessert', 'Pasta', 'Pork', 'Seafood', 'Vegetarian', 'Vegan'].map((cat) => (
+                            <CustomButton
+                                key={cat}
+                                title={cat}
+                                onPress={() => fetchCategoryData(cat)}
+                                isSelected={selectedCategory === cat}
+                            />
+                        ))}
+                      </View>
                     </View>
-                  </View>
-              )}
-              contentContainerStyle={styles.list}
-          />
+                )}
+                contentContainerStyle={styles.list}
+            />
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -264,9 +264,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'flex-start',
     paddingHorizontal: 20,
-    paddingTop: 50,
+    paddingTop: 10,
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -277,7 +276,6 @@ const styles = StyleSheet.create({
   list: {
     paddingVertical: 10,
     flexGrow: 1,
-    width: 300,
   },
   searchContainer: {
     backgroundColor: 'white',
