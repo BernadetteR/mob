@@ -1,9 +1,6 @@
 import React from 'react';
 import { StyleSheet, Image, View, Text, StatusBar, Platform } from 'react-native';
 
-// Importing logo as a module
-import logo from '../img/logo.png';
-
 // Define Props type
 type HeaderProps = {
     headlineText: string;
@@ -17,7 +14,7 @@ export default function Header(props: HeaderProps) {
                 barStyle="light-content"
                 translucent={Platform.OS === 'android'}
             />
-            <Image source={logo} style={styles.logo} />
+            <Image source={require('.././img/logo.png')} style={styles.logo}/>
             <View style={styles.textContainer}>
                 <Text style={styles.headline}>{props.headlineText}</Text>
             </View>

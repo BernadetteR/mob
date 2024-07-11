@@ -60,7 +60,6 @@ export default function App() {
               return [];
             })
     );
-
     // Wait for all fetch promises to complete
     Promise.all(promises)
         .then(results => {
@@ -139,7 +138,6 @@ export default function App() {
             strInstructions: meal.strInstructions,
             strYoutube: meal.strYoutube,
           }));
-
           setFilteredData(categoryMeals); // Update filtered data with category meals
           setLoading(false); // Set loading state to false after data fetching
         })
@@ -187,11 +185,11 @@ export default function App() {
     if (recipe === null) return;  // no recipe liked
     // toggle liked status of the recipe in the liked recipes state
     let updatedLikedRecipes;
-    if (likedRecipes.some(likedRecipe => likedRecipe.idMeal === recipe.idMeal)) {
-      updatedLikedRecipes = likedRecipes.filter(likedRecipe => likedRecipe.idMeal !== recipe.idMeal);
+    if (likedRecipes.some(likedRecipe => likedRecipe.idMeal === recipe.idMeal)) { //checks if there is a recipe with the same id
+      updatedLikedRecipes = likedRecipes.filter(likedRecipe => likedRecipe.idMeal !== recipe.idMeal); //deletes recipe if already liked
     }
     else {
-      updatedLikedRecipes = [...likedRecipes, recipe];
+      updatedLikedRecipes = [...likedRecipes, recipe]; //adds new recipe to liked list
     }
     // update liked recipes state
     setLikedRecipes(updatedLikedRecipes);
